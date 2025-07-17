@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_URL = ProcessingInstruction.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL;
 
 function LoginPage({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
@@ -9,7 +9,7 @@ function LoginPage({ onLoginSuccess }) {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Impede o recarregamento da página
+    e.preventDefault();
     setError("");
 
     try {
@@ -21,7 +21,6 @@ function LoginPage({ onLoginSuccess }) {
       if (response.data.access) {
         localStorage.setItem("accessToken", response.data.access);
         localStorage.setItem("refreshToken", response.data.refresh);
-
         onLoginSuccess();
       }
     } catch (err) {
@@ -32,7 +31,7 @@ function LoginPage({ onLoginSuccess }) {
 
   return (
     <div style={{ padding: "50px", maxWidth: "400px", margin: "auto" }}>
-      <h2>Login</h2>
+      <h2>Login do Sistema de Escalas</h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "15px" }}>
           <label>Usuário:</label>

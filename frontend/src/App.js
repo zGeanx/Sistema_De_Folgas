@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 import LoginPage from "./LoginPage";
+import FormularioFolga from "./FormularioFolga";
 
-const API_URL = ProcessingInstruction.env.REACT_APP_URL;
+const API_URL = process.env.REACT_APP_API_URL;
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -35,7 +36,7 @@ function TabelaEscala() {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Erro ao buscar dados!", error);
+        console.error("Erro ao buscar dados da escala!", error);
         setLoading(false);
       });
   }, []);
@@ -59,6 +60,8 @@ function TabelaEscala() {
   });
 
   if (loading) return <p>Carregando escala...</p>;
+  if (cartomantes.length === 0)
+    return <p>Nenhuma folga aprovada para exibir na escala.</p>;
 
   return (
     <table>
@@ -125,8 +128,10 @@ function App() {
         </button>
       </header>
       <main>
+        <FormularioFolga apiClient={apiClient} />
+        <hr style={{ margin: "40px auto", width: "80%" }} />
+        <h2>Escala da Semana</h2>
         <TabelaEscala />
-        {/* Aqui você adicionaria o formulário de solicitação e a lista de aprovação do admin */}
       </main>
     </div>
   );
