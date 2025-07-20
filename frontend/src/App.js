@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
-import LoginPage from "./LoginPage";
 import FormularioFolga from "./FormularioFolga";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -9,19 +8,6 @@ const API_URL = process.env.REACT_APP_API_URL;
 const apiClient = axios.create({
   baseURL: API_URL,
 });
-
-apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 function TabelaEscala() {
   const [folgasAprovadas, setFolgasAprovadas] = useState([]);
@@ -51,11 +37,13 @@ function TabelaEscala() {
     "domingo",
   ];
   const turnos = ["manha", "tarde", "noite"];
-  const cartomantes = [...new Set(folgasAprovadas.map((f) => f.cartomante))];
+  const cartomantes = [
+    ...new Set(folgasAprovadas.map((f) => f.cartomante_nome)),
+  ];
 
   const escalaMap = new Map();
   folgasAprovadas.forEach((f) => {
-    const key = `${f.cartomante}-${f.dia_semana}-${f.turno}`;
+    const key = `${f.cartomante_nome}-${f.dia_semana}-${f.turno}`;
     escalaMap.set(key, "FOLGA");
   });
 
@@ -100,37 +88,15 @@ function TabelaEscala() {
 }
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("accessToken"));
-
-  const handleLoginSuccess = () => {
-    setToken(localStorage.getItem("accessToken"));
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    setToken(null);
-  };
-
-  if (!token) {
-    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
-  }
-
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Sistema de Escalas</h1>
-        <button
-          onClick={handleLogout}
-          style={{ position: "absolute", top: "20px", right: "20px" }}
-        >
-          Logout
-        </button>
+        <h1>Sistema de Escalas de Folga</h1>
       </header>
       <main>
         <FormularioFolga apiClient={apiClient} />
         <hr style={{ margin: "40px auto", width: "80%" }} />
-        <h2>Escala da Semana</h2>
+        <h2>Escala da Semana (Folgas Aprovadas)</h2>
         <TabelaEscala />
       </main>
     </div>
