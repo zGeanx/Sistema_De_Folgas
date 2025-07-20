@@ -22,7 +22,7 @@ class SolicitacaoFolga(models.Model):
         ("recusada", "Recusada"),
     )
 
-    cartomante = models.ForeignKey(User, on_delete=models.CASCADE)
+    cartomante_nome = models.CharField(max_length=100)
     dia_semana = models.CharField(max_length=10, choices=DIAS_SEMANA)
     turno = models.CharField(max_length=10, choices=TURNOS)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pendente")
