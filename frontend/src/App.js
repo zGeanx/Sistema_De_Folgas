@@ -52,38 +52,40 @@ function TabelaEscala() {
     return <p>Nenhuma folga aprovada para exibir na escala.</p>;
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Cartomante / Turno</th>
-          {dias.map((dia) => (
-            <th key={dia}>{dia.charAt(0).toUpperCase() + dia.slice(1)}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {cartomantes.map((cartomante) =>
-          turnos.map((turno) => (
-            <tr key={`${cartomante}-${turno}`}>
-              <td>
-                <strong>{cartomante}</strong> - {turno}
-              </td>
-              {dias.map((dia) => {
-                const key = `${cartomante}-${dia}-${turno}`;
-                return (
-                  <td
-                    key={key}
-                    className={escalaMap.get(key) ? "folga" : "trabalho"}
-                  >
-                    {escalaMap.get(key) || "Trabalhando"}
-                  </td>
-                );
-              })}
-            </tr>
-          ))
-        )}
-      </tbody>
-    </table>
+    <div className="tabela-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Cartomante / Turno</th>
+            {dias.map((dia) => (
+              <th key={dia}>{dia.charAt(0).toUpperCase() + dia.slice(1)}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {cartomantes.map((cartomante) =>
+            turnos.map((turno) => (
+              <tr key={`${cartomante}-${turno}`}>
+                <td>
+                  <strong>{cartomante}</strong> - {turno}
+                </td>
+                {dias.map((dia) => {
+                  const key = `${cartomante}-${dia}-${turno}`;
+                  return (
+                    <td
+                      key={key}
+                      className={escalaMap.get(key) ? "folga" : "trabalho"}
+                    >
+                      {escalaMap.get(key) || "Trabalhando"}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

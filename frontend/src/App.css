@@ -59,6 +59,7 @@ hr {
 
 table {
   width: 100%;
+  min-width: 700px;
   border-collapse: collapse;
   margin-top: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -70,8 +71,9 @@ table {
 th,
 td {
   border-bottom: 1px solid #5a4a7a;
-  padding: 16px;
-  text-align: left;
+  padding: 14px;
+  text-align: center;
+  vertical-align: middle;
 }
 
 th {
@@ -90,4 +92,9 @@ th {
 .folga::before {
   content: "★ ";
   color: var(--cor-acento-dourado);
+}
+
+.tabela-wrapper {
+  width: 100%;
+  overflow-x: auto;
 }
