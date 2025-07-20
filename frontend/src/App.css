@@ -1,21 +1,20 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap");
 
 :root {
-  --cor-primaria-roxo: #6a0dad;
+  --cor-fundo-roxo: #2c1d44;
   --cor-acento-dourado: #ffd700;
-  --cor-fundo-pagina: #f4f2f7;
-  --cor-texto-principal: #333333;
+  --cor-texto-claro: #f5f5f5;
+  --cor-texto-escuro: #1a1a1a;
+  --cor-container-escuro: #3e2c5f;
 }
 
 body {
   margin: 0;
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
+  font-family: "Montserrat", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--cor-fundo-pagina);
-  color: var(--cor-texto-principal);
+  background-color: var(--cor-fundo-roxo);
+  color: var(--cor-texto-claro);
 }
 
 .App {
@@ -23,6 +22,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  min-height: 100vh;
 }
 
 .App-header {
@@ -32,8 +32,9 @@ body {
 }
 
 .App-header h1 {
-  color: var(--cor-primaria-roxo);
+  color: var(--cor-acento-dourado);
   font-weight: 600;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 main {
@@ -45,7 +46,7 @@ main {
 }
 
 main h2 {
-  color: var(--cor-texto-principal);
+  color: var(--cor-texto-claro);
   font-weight: 600;
 }
 
@@ -53,34 +54,36 @@ hr {
   width: 80%;
   margin: 40px auto;
   border: 0;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--cor-container-escuro);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  background-color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  background-color: var(--cor-container-escuro);
   border-radius: 8px;
   overflow: hidden;
 }
 
 th,
 td {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #5a4a7a;
   padding: 16px;
   text-align: left;
 }
 
 th {
-  background-color: #fafafa;
+  background-color: rgba(0, 0, 0, 0.2);
   font-weight: 600;
+  color: var(--cor-acento-dourado);
 }
 
+/* Destaque da folga em dourado */
 .folga {
-  background-color: #fff8e1;
-  color: #6d4c41;
+  background-color: rgba(255, 215, 0, 0.1);
+  color: var(--cor-acento-dourado);
   font-weight: bold;
 }
 

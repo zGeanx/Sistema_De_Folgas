@@ -1,17 +1,3 @@
-:root {
-  --cor-primaria-roxo: #6a0dad;
-  --cor-primaria-escura: #4a097d;
-  --cor-acento-dourado: #ffd700;
-  --cor-texto-principal: #333333;
-  --cor-texto-secundario: #555555;
-  --cor-fundo-container: #ffffff;
-  --cor-borda: #e0e0e0;
-  --cor-sucesso-fundo: #e8f5e9;
-  --cor-sucesso-texto: #2e7d32;
-  --cor-erro-fundo: #ffcdd2;
-  --cor-erro-texto: #c62828;
-}
-
 .form-container {
   display: flex;
   flex-direction: column;
@@ -20,14 +6,14 @@
   margin: 40px auto;
   max-width: 400px;
   width: 90%;
-  border: 1px solid var(--cor-borda);
   border-radius: 12px;
-  background-color: var(--cor-fundo-container);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background-color: var(--cor-container-escuro);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .form-container h2 {
-  color: var(--cor-primaria-roxo);
+  color: var(--cor-texto-claro);
   font-weight: 600;
   margin-bottom: 25px;
   text-align: center;
@@ -43,16 +29,18 @@
 .input-group label {
   font-weight: 500;
   margin-bottom: 8px;
-  color: var(--cor-texto-secundario);
+  color: #b3a8c8;
   font-size: 0.9em;
 }
 
 input,
 select {
   padding: 12px;
-  border: 1px solid var(--cor-borda);
+  border: 1px solid #5a4a7a;
   border-radius: 8px;
   font-size: 16px;
+  background-color: var(--cor-fundo-roxo);
+  color: var(--cor-texto-claro);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -64,8 +52,8 @@ select:focus {
 }
 
 button {
-  background-color: var(--cor-primaria-roxo);
-  color: white;
+  background-color: var(--cor-acento-dourado);
+  color: var(--cor-texto-escuro);
   padding: 14px 20px;
   border: none;
   border-radius: 8px;
@@ -73,11 +61,12 @@ button {
   font-size: 16px;
   font-weight: bold;
   width: 100%;
-  transition: background-color 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 button:hover {
-  background-color: var(--cor-primaria-escura);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
 }
 
 .message {
@@ -90,11 +79,11 @@ button:hover {
 }
 
 .message.success {
-  background-color: var(--cor-sucesso-fundo);
-  color: var(--cor-sucesso-texto);
+  background-color: #004d40;
+  color: #b2dfdb;
 }
 
 .message.error {
-  background-color: var(--cor-erro-fundo);
-  color: var(--cor-erro-texto);
+  background-color: #b71c1c;
+  color: #ffcdd2;
 }
