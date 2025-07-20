@@ -2,10 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
   padding: 30px;
   margin: 40px auto;
+  width: 100%;
   max-width: 400px;
-  width: 90%;
   border-radius: 12px;
   background-color: var(--cor-container-escuro);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
