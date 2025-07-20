@@ -1,28 +1,29 @@
 import React, { useState } from "react";
 
 function FormularioFolga({ apiClient, onFolgaSolicitada }) {
+  const [nome, setNome] = useState(""); // NOVO CAMPO
   const [diaSemana, setDiaSemana] = useState("segunda");
   const [turno, setTurno] = useState("manha");
   const [mensagem, setMensagem] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!nome) {
+      setMensagem("Por favor, preencha seu nome.");
+      return;
+    }
     setMensagem("");
 
     try {
       await apiClient.post("/solicitacoes/", {
+        cartomante_nome: nome,
         dia_semana: diaSemana,
         turno: turno,
       });
       setMensagem("Sua solicitação de folga foi enviada com sucesso!");
-
-      if (onFolgaSolicitada) {
-        onFolgaSolicitada();
-      }
+      setNome("");
     } catch (error) {
-      setMensagem(
-        "Ocorreu um erro ao enviar sua solicitação. Tente novamente."
-      );
+      setMensagem("Ocorreu um erro ao enviar sua solicitação.");
       console.error("Erro ao solicitar folga:", error);
     }
   };
@@ -39,6 +40,17 @@ function FormularioFolga({ apiClient, onFolgaSolicitada }) {
     >
       <h3>Solicitar Folga</h3>
       <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: "15px" }}>
+          <label>Seu Nome Místico:</label>
+          <input
+            type="text"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            required
+            style={{ width: "100%", padding: "8px" }}
+          />
+        </div>
+        {}
         <div style={{ marginBottom: "15px" }}>
           <label>Dia da Semana:</label>
           <select
