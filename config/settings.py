@@ -122,8 +122,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = [
-    "https://sistema-de-folgas.vercel.app",
-    "https://localgost:3000",
+     "https://sistema-de-folgas.vercel.app",
+    "http://localhost:3000",
 ]
 
 
@@ -138,10 +138,8 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_HEADERS = [
     'accept',
-    'accept-encoding',
     'authorization',
     'content-type',
-    'dnt',
     'origin',
     'user-agent',
     'x-csrftoken',
