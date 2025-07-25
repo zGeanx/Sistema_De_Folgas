@@ -30,4 +30,4 @@ class SolicitacaoFolga(models.Model):
     data_acao = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.cartomante.username} - {self.get_dia_semana_display()} ({self.get_turno_display()}) - {self.status}"
+          return f"Solicitação de {self.cartomante_nome} ({self.id})"
