@@ -24,6 +24,7 @@ apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
+
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
@@ -31,12 +32,9 @@ apiClient.interceptors.response.use(
                 const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
 
                 if (!refreshToken) {
-                    localStorage.clear();
-                    window.location.href = '/';
                     return Promise.reject(error);
                 }
 
-                // Tentar refresh
                 const response = await axios.post(`${API_URL}/auth/token/refresh/`, {
                     refresh: refreshToken,
                 });
@@ -51,7 +49,6 @@ apiClient.interceptors.response.use(
                 return apiClient(originalRequest);
             } catch (refreshError) {
                 localStorage.clear();
-                window.location.href = '/';
                 return Promise.reject(refreshError);
             }
         }
