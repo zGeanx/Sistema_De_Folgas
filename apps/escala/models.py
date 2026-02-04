@@ -134,7 +134,9 @@ class SolicitacaoFolga(models.Model):
             except SolicitacaoFolga.DoesNotExist:
                 pass
         
-        self.full_clean()
+        # Validação apenas se validate=True for passado
+        if kwargs.pop('validate', False):
+            self.full_clean()
         
         super().save(*args, **kwargs)
 
