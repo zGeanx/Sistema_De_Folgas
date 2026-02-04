@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { folgasService } from '../services/folgas.service';
 import { toast } from 'react-toastify';
 
@@ -39,10 +39,6 @@ export const useFolgas = () => {
             setLoading(false);
         }
     }, []);
-
-    useEffect(() => {
-        carregarFolgas();
-    }, [carregarFolgas]);
 
     return {
         folgas,
