@@ -68,6 +68,11 @@ class SolicitacaoFolgaSerializer(serializers.ModelSerializer):
             return data
         
         usuario = request.user
+        
+        # Pula validação se não há usuário autenticado
+        if not usuario or not usuario.is_authenticated:
+            return data
+        
         dia_semana = data.get('dia_semana')
         turno = data.get('turno')
         
