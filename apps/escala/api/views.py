@@ -26,12 +26,23 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
     """
     
     serializer_class = SolicitacaoFolgaSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrAdmin]
+    
+    def get_permissions(self):
+        if self.action == 'list' and self.request.query_params.get('status') == 'aprovada':
+            return [permissions.AllowAny()]
+        if self.action == 'create':
+            return [permissions.AllowAny()]
+        if self.action in ['aprovar', 'recusar']:
+            return [permissions.IsAdminUser()]
+        return [permissions.IsAuthenticated(), IsOwnerOrAdmin()]
     
     def get_queryset(self):
         queryset = SolicitacaoFolga.objects.select_related('usuario', 'aprovado_por')
         
         user = self.request.user
+        
+        if not user.is_authenticated:
+            return queryset.filter(status='aprovada').order_by('-data_solicitacao')
         
         if user.is_staff:
             return queryset.order_by('-data_solicitacao')
@@ -39,7 +50,14 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
         return queryset.filter(usuario=user).order_by('-data_solicitacao')
     
     def perform_create(self, serializer):
-        serializer.save(usuario=self.request.user)
+        if self.request.user.is_authenticated:
+            serializer.save(usuario=self.request.user)
+        else:
+            from django.contrib.auth.models import User
+            admin_user = User.objects.filter(is_superuser=True).first()
+            if not admin_user:
+                raise ValidationError('Nenhum superusuário encontrado no sistema')
+            serializer.save(usuario=admin_user)
     
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAdminUser])
     def aprovar(self, request, pk=None):
