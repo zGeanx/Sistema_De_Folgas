@@ -55,12 +55,6 @@ export const authService = {
         return response.data;
     },
 
-    getCurrentUser: async () => {
-        const response = await apiClient.get(API_ENDPOINTS.USER_PROFILE);
-        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(response.data));
-        return response.data;
-    },
-
     isAuthenticated: () => {
         return !!localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
     },
