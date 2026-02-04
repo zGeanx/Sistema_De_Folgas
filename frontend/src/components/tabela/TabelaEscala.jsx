@@ -18,11 +18,12 @@ export function TabelaEscala() {
         try {
             setLoading(true);
             const data = await folgasService.getFolgasAprovadas();
-            setFolgasAprovadas(data);
+            setFolgasAprovadas(Array.isArray(data) ? data : []);
         } catch (error) {
             setError('Erro ao carregar escala');
             toast.error('Erro ao buscar dados da escala!');
             console.error(error);
+            setFolgasAprovadas([]);
         } finally {
             setLoading(false);
         }
