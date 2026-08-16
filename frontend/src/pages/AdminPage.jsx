@@ -1,0 +1,162 @@
+import React, { useEffect, useState } from 'react';
+import { LayoutDashboard, FileText, Calendar } from 'lucide-react';
+import { Header } from '@/components/layout/Header';
+import { AdminSidebar } from '@/components/layout/AdminSidebar';
+import { DashboardStats } from '@/components/admin/DashboardStats';
+import { SolicitacoesGestao } from '@/components/gestao/SolicitacoesGestao';
+import { TabelaEscala } from '@/components/tabela/TabelaEscala';
+import { useFolgas } from '@/hooks/useFolgas';
+
+const MOBILE_NAV_ITEMS = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'solicitacoes', label: 'Solicitações', icon: FileText },
+  { id: 'escala', label: 'Escala', icon: Calendar },
+];
+
+export function AdminPage() {
+  const {
+    folgas,
+    loading,
+    carregarFolgas,
+    aprovarFolga,
+    recusarFolga,
+    excluirFolga,
+  } = useFolgas();
+
+  const [activeSection, setActiveSection] = useState('dashboard');
+
+  useEffect(() => {
+    carregarFolgas();
+  }, [carregarFolgas]);
+
+  const handleAprovar = async (id) => {
+    await aprovarFolga(id);
+    await carregarFolgas();
+  };
+
+  const handleRecusar = async (id) => {
+    await recusarFolga(id);
+    await carregarFolgas();
+  };
+
+  const handleExcluir = async (id) => {
+    await excluirFolga(id);
+    await carregarFolgas();
+  };
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'dashboard':
+        return (
+          <div className="space-y-6 page-enter">
+            <div>
+              <h2 className="text-lg font-bold text-moonlight">Visão Geral</h2>
+              <p className="text-xs text-silver-mist mt-0.5">Resumo de todas as solicitações de folga</p>
+            </div>
+            <DashboardStats folgas={folgas} />
+
+            {/* Recent pending */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-moonlight">Pendentes recentes</h3>
+              {folgas.filter((f) => f.status === 'pendente').length === 0 ? (
+                <div className="glass rounded-2xl border border-white/[0.06] p-6 text-center">
+                  <p className="text-xs text-silver-mist">Nenhuma solicitação pendente no momento.</p>
+                </div>
+              ) : (
+                <SolicitacoesGestao
+                  folgas={folgas.filter((f) => f.status === 'pendente')}
+                  onAprovar={handleAprovar}
+                  onRecusar={handleRecusar}
+                  onExcluir={handleExcluir}
+                  loading={loading}
+                />
+              )}
+            </div>
+          </div>
+        );
+
+      case 'solicitacoes':
+        return (
+          <div className="space-y-4 page-enter">
+            <div>
+              <h2 className="text-lg font-bold text-moonlight">Todas as Solicitações</h2>
+              <p className="text-xs text-silver-mist mt-0.5">Gerencie aprovações e recusas de folgas</p>
+            </div>
+            <SolicitacoesGestao
+              folgas={folgas}
+              onAprovar={handleAprovar}
+              onRecusar={handleRecusar}
+              onExcluir={handleExcluir}
+              loading={loading}
+            />
+          </div>
+        );
+
+      case 'escala':
+        return (
+          <div className="space-y-4 page-enter">
+            <div>
+              <h2 className="text-lg font-bold text-moonlight">Escala Semanal</h2>
+              <p className="text-xs text-silver-mist mt-0.5">Folgas aprovadas consolidadas por cartomante</p>
+            </div>
+            <TabelaEscala
+              folgas={folgas}
+              loading={loading}
+              onRefresh={carregarFolgas}
+              variant="admin"
+            />
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-obsidian text-moonlight flex">
+      {/* Desktop Sidebar */}
+      <AdminSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
+
+      {/* Main Area */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        <Header variant="admin" />
+
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-20 lg:pb-8 max-w-5xl">
+          {renderContent()}
+        </main>
+      </div>
+
+      {/* Mobile Bottom Nav (admin version) */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-elevated border-t border-white/[0.06] lg:hidden"
+           style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+        <div className="flex items-stretch">
+          {MOBILE_NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.id;
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveSection(item.id)}
+                className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 px-2 transition-all duration-200 relative ${
+                  isActive ? 'text-amber-gold' : 'text-silver-mist'
+                }`}
+              >
+                <Icon className={`w-5 h-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
+                <span className={`text-[10px] font-semibold ${isActive ? 'text-amber-gold' : ''}`}>
+                  {item.label}
+                </span>
+                {isActive && (
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2px] rounded-full bg-amber-gold shadow-[0_0_8px_2px_rgba(232,168,50,0.35)]" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
+  );
+}
+
+export default AdminPage;
