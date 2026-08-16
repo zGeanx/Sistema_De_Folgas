@@ -28,16 +28,5 @@ export const DIAS_ARRAY = Object.keys(DIAS_SEMANA);
 export const TURNOS_ARRAY = Object.keys(TURNOS);
 
 export const API_ENDPOINTS = {
-  LOGIN: '/auth/login/',
-  REGISTER: '/auth/register/',
-  LOGOUT: '/auth/logout/',
-  REFRESH_TOKEN: '/auth/token/refresh/',
-  USER_PROFILE: '/auth/me/',
   SOLICITACOES: '/solicitacoes/',
-};
-
-export const STORAGE_KEYS = {
-  ACCESS_TOKEN: 'access_token',
-  REFRESH_TOKEN: 'refresh_token',
-  USER: 'user',
 };
