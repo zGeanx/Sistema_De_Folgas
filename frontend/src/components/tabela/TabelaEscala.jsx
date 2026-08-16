@@ -3,18 +3,8 @@ import { Moon, Sun, Sunset, Calendar, RefreshCw, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { DIAS_ARRAY, TURNOS_ARRAY, DIAS_SEMANA, TURNOS } from '@/utils/constants';
+import { DIAS_ARRAY, TURNOS_ARRAY, DIAS_SEMANA, TURNOS, DIA_SHORT } from '@/utils/constants';
 import { capitalize } from '@/utils/formatters';
-
-const DIA_SHORT = {
-  segunda: 'Seg',
-  terca: 'Ter',
-  quarta: 'Qua',
-  quinta: 'Qui',
-  sexta: 'Sex',
-  sabado: 'Sáb',
-  domingo: 'Dom',
-};
 
 const TURNO_ICONS = {
   manha: Sun,
@@ -56,6 +46,21 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant 
     escalaMap.set(key, folga);
   });
 
+  // Skeleton loading
+  const renderSkeleton = () => (
+    <div className="space-y-4">
+      <div className="skeleton h-10 w-full" />
+      <div className="flex gap-2">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="skeleton h-8 w-20" />
+        ))}
+      </div>
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="skeleton h-24 w-full rounded-2xl" />
+      ))}
+    </div>
+  );
+
   // Mobile card view - group by cartomante
   const renderMobileCards = () => {
     if (filteredCartomantes.length === 0) {
@@ -96,7 +101,7 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant 
                       <div key={folga.id} className="px-4 py-3 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className={`p-1.5 rounded-lg ${turnoColor.bg} ${turnoColor.text}`}>
-                            <TurnoIcon className="w-3.5 h-3.5" />
+                            <TurnoIcon className="w-3.5 h-3.5" aria-hidden="true" />
                           </div>
                           <div>
                             <div className="text-xs font-medium text-moonlight">
@@ -107,7 +112,7 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant 
                             </div>
                           </div>
                         </div>
-                        <Badge className={`text-[10px] ${turnoColor.bg} ${turnoColor.text} ${turnoColor.border} border font-medium`}>
+                        <Badge className={`text-[10px] ${turnoColor.bg} ${turnoColor.text} ${turnoColor.border} border font-medium touch-compact`}>
                           Folga
                         </Badge>
                       </div>
@@ -132,13 +137,14 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant 
         <table className="w-full text-left text-xs border-collapse">
           <thead>
             <tr className="bg-midnight/80 border-b border-white/[0.06] text-silver-mist uppercase tracking-wider font-semibold text-[11px]">
-              <th className="py-3 px-4 min-w-[180px] border-r border-white/[0.04]">
+              <th className="py-3 px-4 min-w-[180px] border-r border-white/[0.04]" scope="col">
                 Cartomante / Turno
               </th>
               {DIAS_ARRAY.map((dia) => (
                 <th
                   key={dia}
                   className="py-3 px-3 text-center min-w-[100px] border-r border-white/[0.04] last:border-r-0"
+                  scope="col"
                 >
                   <div className="text-moonlight font-bold">{DIA_SHORT[dia]}</div>
                 </th>
@@ -167,7 +173,7 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant 
                         <div>
                           <div className="font-semibold text-moonlight text-xs">{cartomante}</div>
                           <div className={`text-[10px] flex items-center gap-1 ${turnoColor.text}`}>
-                            <TurnoIcon className="w-2.5 h-2.5" />
+                            <TurnoIcon className="w-2.5 h-2.5" aria-hidden="true" />
                             {capitalize(turno)}
                           </div>
                         </div>
@@ -189,7 +195,7 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant 
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 text-silver-mist/40 text-[10px]">
-                              <span className="w-1 h-1 rounded-full bg-silver-mist/30" />
+                              <span className="w-1 h-1 rounded-full bg-silver-mist/30" aria-hidden="true" />
                               —
                             </span>
                           )}
@@ -208,12 +214,14 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant 
 
   const renderEmptyState = () => (
     <div className="p-12 text-center space-y-3">
-      <div className="w-12 h-12 rounded-2xl bg-twilight border border-white/[0.06] flex items-center justify-center mx-auto text-amber-gold">
-        <Calendar className="w-5 h-5" />
+      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-gold/10 to-amethyst/10 border border-white/[0.06] flex items-center justify-center mx-auto">
+        <Calendar className="w-6 h-6 text-amber-gold" aria-hidden="true" />
       </div>
-      <p className="text-sm font-medium text-moonlight">Nenhuma escala registrada</p>
-      <p className="text-xs text-silver-mist max-w-xs mx-auto">
-        Ainda não há folgas aprovadas para exibir. Solicite uma folga para começar.
+      <p className="text-sm font-semibold text-moonlight">Nenhuma escala registrada</p>
+      <p className="text-xs text-silver-mist max-w-xs mx-auto leading-relaxed">
+        {searchTerm
+          ? `Nenhum resultado para "${searchTerm}". Tente buscar por outro nome.`
+          : 'Ainda não há folgas aprovadas para exibir. Solicite uma folga para começar.'}
       </p>
     </div>
   );
@@ -224,20 +232,22 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant 
       <div className="space-y-3">
         {/* Search */}
         <div className="relative">
-          <Search className="w-4 h-4 text-silver-mist absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-silver-mist absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
           <Input
             placeholder="Buscar cartomante..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            aria-label="Buscar escala por nome da cartomante"
             className="bg-midnight border-white/[0.08] text-moonlight placeholder:text-silver-mist/50 text-xs pl-9 h-10 rounded-xl"
           />
         </div>
 
         {/* Turno filter + Refresh */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none" role="group" aria-label="Filtrar por turno">
           <button
             onClick={() => setSelectedTurnoFilter('todos')}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+            aria-pressed={selectedTurnoFilter === 'todos'}
+            className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all touch-compact ${
               selectedTurnoFilter === 'todos'
                 ? 'chip-selected'
                 : 'chip-idle hover:text-slate-300'
@@ -251,13 +261,14 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant 
               <button
                 key={t}
                 onClick={() => setSelectedTurnoFilter(t)}
-                className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 ${
+                aria-pressed={selectedTurnoFilter === t}
+                className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 touch-compact ${
                   selectedTurnoFilter === t
                     ? 'chip-selected'
                     : 'chip-idle hover:text-slate-300'
                 }`}
               >
-                <Icon className="w-3 h-3" />
+                <Icon className="w-3 h-3" aria-hidden="true" />
                 {capitalize(t)}
               </button>
             );
@@ -269,20 +280,18 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant 
               size="sm"
               onClick={onRefresh}
               disabled={loading}
-              className="flex-shrink-0 text-silver-mist hover:text-moonlight h-8 w-8 p-0 ml-auto"
+              aria-label="Atualizar escala"
+              className="flex-shrink-0 text-silver-mist hover:text-moonlight h-9 w-9 p-0 ml-auto"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
             </Button>
           )}
         </div>
       </div>
 
-      {/* Loading */}
+      {/* Content */}
       {loading ? (
-        <div className="p-12 text-center">
-          <RefreshCw className="w-5 h-5 animate-spin mx-auto text-amber-gold mb-2" />
-          <p className="text-xs text-silver-mist">Carregando escala...</p>
-        </div>
+        renderSkeleton()
       ) : (
         <>
           {/* Mobile: cards, Desktop: table */}
