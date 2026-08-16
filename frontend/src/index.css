@@ -100,27 +100,33 @@
 }
 
 /* ══════════════════════════════════════════════
-   Glass Panel Utilities
+   Glass Panel Utilities (Otimizados para 60/120fps no iOS WebKit)
    ══════════════════════════════════════════════ */
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .glass-gold {
   background: rgba(26, 21, 35, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(232, 168, 50, 0.15);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .glass-elevated {
-  background: rgba(26, 32, 53, 0.8);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(26, 32, 53, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* ══════════════════════════════════════════════
