@@ -26,28 +26,28 @@ export function CartomantePage() {
   };
 
   return (
-    <div className="min-h-screen bg-obsidian text-moonlight flex flex-col relative">
-      {/* Ambient background glow */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute -top-32 left-1/4 w-[400px] h-[400px] bg-amethyst/[0.06] rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 -right-16 w-[350px] h-[350px] bg-amber-gold/[0.04] rounded-full blur-[120px]" />
+    <div className="min-h-screen bg-obsidian text-moonlight flex flex-col relative overflow-x-hidden">
+      {/* Ambient background glow — otimizado com radial-gradient sem blurs pesados para 120fps no iOS */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-40">
+        <div className="absolute -top-24 left-1/4 w-96 h-96 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amethyst/20 via-transparent to-transparent" />
+        <div className="absolute top-1/3 -right-20 w-80 h-80 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-gold/15 via-transparent to-transparent" />
       </div>
 
       <div className="relative z-10 flex-1 flex flex-col max-w-lg sm:max-w-2xl mx-auto w-full">
         <Header variant="cartomante" />
 
-        {/* Page Content */}
+        {/* Page Content — abas preservadas no DOM para troca instantânea (0ms de lag no iPhone) */}
         <main className="flex-1 px-4 pb-safe">
-          {activeTab === 'solicitar' && (
+          <div className={activeTab === 'solicitar' ? 'block' : 'hidden'}>
             <FormularioFolga onFolgaCreated={handleCreated} />
-          )}
-          {activeTab === 'escala' && (
+          </div>
+          <div className={activeTab === 'escala' ? 'block' : 'hidden'}>
             <TabelaEscala
               folgas={folgas}
               loading={loading}
               onRefresh={carregarFolgas}
             />
-          )}
+          </div>
         </main>
       </div>
 
