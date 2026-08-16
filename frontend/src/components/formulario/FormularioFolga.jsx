@@ -232,7 +232,7 @@ export function FormularioFolga({ onFolgaCreated }) {
 
       {/* Confirmation Dialog */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="glass border-amber-gold/20 text-moonlight max-w-sm mx-4 rounded-2xl">
+        <DialogContent className="glass border-amber-gold/20 text-moonlight w-[calc(100%-2rem)] sm:w-full max-w-sm rounded-2xl">
           <DialogHeader>
             <div className="mx-auto w-11 h-11 rounded-full bg-amber-gold/10 border border-amber-gold/25 flex items-center justify-center text-amber-gold mb-2">
               <Moon className="w-5 h-5" aria-hidden="true" />
