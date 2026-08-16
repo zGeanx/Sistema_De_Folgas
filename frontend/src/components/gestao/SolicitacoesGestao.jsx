@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, XCircle, Trash2, Clock, Search, Filter, User, Moon, Sun, Sunset, AlertTriangle, FileText } from 'lucide-react';
+import { CheckCircle2, XCircle, Trash2, Clock, Search, Filter, User, Moon, Sun, Sunset, FileText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
