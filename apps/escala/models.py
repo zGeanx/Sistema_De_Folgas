@@ -93,9 +93,9 @@ class SolicitacaoFolga(models.Model):
     def clean(self):
         super().clean()
         
-        if self.usuario:
+        if self.cartomante_nome:
             folgas_ativas = SolicitacaoFolga.objects.filter(
-                usuario=self.usuario,
+                cartomante_nome__iexact=self.cartomante_nome.strip(),
                 status__in=['pendente', 'aprovada']
             )
             
@@ -109,7 +109,7 @@ class SolicitacaoFolga(models.Model):
                 )
             
             duplicata = SolicitacaoFolga.objects.filter(
-                usuario=self.usuario,
+                cartomante_nome__iexact=self.cartomante_nome.strip(),
                 dia_semana=self.dia_semana,
                 turno=self.turno,
                 status__in=['pendente', 'aprovada']
