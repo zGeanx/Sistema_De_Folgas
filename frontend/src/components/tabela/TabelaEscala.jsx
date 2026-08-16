@@ -133,7 +133,7 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh }) {
     );
   };
 
-  // Desktop table view
+  // Desktop table view (1 linha por cartomante com indicação do turno escolhido)
   const renderDesktopTable = () => {
     if (filteredCartomantes.length === 0) {
       return renderEmptyState();
@@ -144,13 +144,13 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh }) {
         <table className="w-full text-left text-xs border-collapse">
           <thead>
             <tr className="bg-midnight/80 border-b border-white/[0.06] text-silver-mist uppercase tracking-wider font-semibold text-[11px]">
-              <th className="py-3 px-4 min-w-[180px] border-r border-white/[0.04]" scope="col">
-                Cartomante / Turno
+              <th className="py-3 px-4 min-w-[200px] border-r border-white/[0.04]" scope="col">
+                Cartomante
               </th>
               {DIAS_ARRAY.map((dia) => (
                 <th
                   key={dia}
-                  className="py-3 px-3 text-center min-w-[100px] border-r border-white/[0.04] last:border-r-0"
+                  className="py-3 px-3 text-center min-w-[110px] border-r border-white/[0.04] last:border-r-0"
                   scope="col"
                 >
                   <div className="text-moonlight font-bold">{DIA_SHORT[dia]}</div>
@@ -159,60 +159,71 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-white/[0.04]">
-            {filteredCartomantes.map((cartomante, cIdx) =>
-              visibleTurnos.map((turno, tIdx) => {
-                const TurnoIcon = TURNO_ICONS[turno];
-                const turnoColor = TURNO_COLORS[turno];
-                const isFirstRowOfCartomante = tIdx === 0;
+            {filteredCartomantes.map((cartomante) => {
+              const cartomanteFolgas = folgasAprovadas.filter(
+                (f) => f.cartomante_nome === cartomante
+              );
 
-                return (
-                  <tr
-                    key={`${cartomante}-${turno}`}
-                    className={`hover:bg-white/[0.02] transition-colors ${
-                      isFirstRowOfCartomante && cIdx > 0 ? 'border-t-2 border-white/[0.06]' : ''
-                    }`}
-                  >
-                    <td className="py-2.5 px-4 border-r border-white/[0.04] bg-midnight/40">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-lg bg-amethyst/10 border border-amethyst/20 flex items-center justify-center text-amethyst font-bold text-[10px]">
-                          {cartomante.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-moonlight text-xs">{cartomante}</div>
-                          <div className={`text-[10px] flex items-center gap-1 ${turnoColor.text}`}>
-                            <TurnoIcon className="w-2.5 h-2.5" aria-hidden="true" />
-                            {capitalize(turno)}
-                          </div>
+              return (
+                <tr
+                  key={cartomante}
+                  className="hover:bg-white/[0.02] transition-colors"
+                >
+                  <td className="py-3 px-4 border-r border-white/[0.04] bg-midnight/40">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-amethyst/10 border border-amethyst/20 flex items-center justify-center text-amethyst font-bold text-xs">
+                        {cartomante.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-moonlight text-xs">{cartomante}</div>
+                        <div className="text-[10px] text-silver-mist">
+                          {cartomanteFolgas.length} folga{cartomanteFolgas.length > 1 ? 's' : ''}
                         </div>
                       </div>
-                    </td>
+                    </div>
+                  </td>
 
-                    {DIAS_ARRAY.map((dia) => {
-                      const key = `${cartomante}-${dia}-${turno}`;
-                      const temFolga = escalaMap.has(key);
+                  {DIAS_ARRAY.map((dia) => {
+                    // Localiza folga aprovada para este cartomante neste dia
+                    const folgaDoDia = cartomanteFolgas.find(
+                      (f) =>
+                        f.dia_semana === dia &&
+                        (selectedTurnoFilter === 'todos' || f.turno === selectedTurnoFilter)
+                    );
 
+                    if (!folgaDoDia) {
                       return (
                         <td
-                          key={key}
-                          className="py-2.5 px-2 text-center border-r border-white/[0.04] last:border-r-0"
+                          key={dia}
+                          className="py-3 px-2 text-center border-r border-white/[0.04] last:border-r-0"
                         >
-                          {temFolga ? (
-                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold ${turnoColor.bg} ${turnoColor.text} ${turnoColor.border} border`}>
-                              Folga
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 text-silver-mist/40 text-[10px]">
-                              <span className="w-1 h-1 rounded-full bg-silver-mist/30" aria-hidden="true" />
-                              —
-                            </span>
-                          )}
+                          <span className="inline-flex items-center gap-1 text-silver-mist/40 text-[11px]">
+                            —
+                          </span>
                         </td>
                       );
-                    })}
-                  </tr>
-                );
-              })
-            )}
+                    }
+
+                    const TurnoIcon = TURNO_ICONS[folgaDoDia.turno] || Sun;
+                    const turnoColor = TURNO_COLORS[folgaDoDia.turno] || TURNO_COLORS.manha;
+
+                    return (
+                      <td
+                        key={dia}
+                        className="py-3 px-2 text-center border-r border-white/[0.04] last:border-r-0"
+                      >
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold ${turnoColor.bg} ${turnoColor.text} ${turnoColor.border} border shadow-sm`}
+                        >
+                          <TurnoIcon className="w-3 h-3" aria-hidden="true" />
+                          {capitalize(folgaDoDia.turno)}
+                        </span>
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
