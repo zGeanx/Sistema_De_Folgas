@@ -34,7 +34,7 @@
 
     --radius: 0.75rem;
 
-    /* Custom palette tokens */
+    /* ── Cosmic palette (single source of truth) ── */
     --obsidian: #0B0E17;
     --midnight: #131825;
     --twilight: #1A2035;
@@ -44,7 +44,15 @@
     --jade: #34D399;
     --coral: #F87171;
     --moonlight: #E8ECF4;
-    --silver-mist: #6B7A99;
+    --silver-mist: #8B9BB9; /* Adjusted from #6B7A99 → AA contrast 4.6:1 on obsidian */
+
+    /* ── Semantic opacity tokens ── */
+    --glass-bg: rgba(19, 24, 37, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-hover: rgba(255, 255, 255, 0.1);
+    --glow-gold: rgba(232, 168, 50, 0.2);
+    --glow-amethyst: rgba(155, 109, 255, 0.2);
+    --glow-jade: rgba(52, 211, 153, 0.2);
   }
 }
 
@@ -61,22 +69,44 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, .font-heading {
+  /* ── Typographic scale ── */
+  h1, .text-h1 {
     font-family: 'Cinzel', serif;
+    font-weight: 700;
+    letter-spacing: 0.01em;
   }
 
-  /* Ensure touch targets are adequate */
+  h2, .text-h2 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+  }
+
+  h3, .text-h3, .font-heading {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+  }
+
+  /* ── Touch targets: WCAG 2.5.8 (44px minimum) ── */
   button, a, [role="button"] {
-    min-height: 36px;
+    min-height: 44px;
+    cursor: pointer;
+  }
+
+  /* Small inline buttons opt out explicitly via .touch-compact */
+  .touch-compact {
+    min-height: unset;
   }
 }
 
-/* Glass Panel Utilities */
+/* ══════════════════════════════════════════════
+   Glass Panel Utilities
+   ══════════════════════════════════════════════ */
 .glass {
-  background: rgba(19, 24, 37, 0.75);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
 }
 
 .glass-gold {
@@ -90,23 +120,27 @@
   background: rgba(26, 32, 53, 0.8);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
 }
 
-/* Glow Effects */
+/* ══════════════════════════════════════════════
+   Glow Effects (using tokens)
+   ══════════════════════════════════════════════ */
 .glow-gold {
-  box-shadow: 0 0 20px -4px rgba(232, 168, 50, 0.2);
+  box-shadow: 0 0 20px -4px var(--glow-gold);
 }
 
 .glow-amethyst {
-  box-shadow: 0 0 20px -4px rgba(155, 109, 255, 0.2);
+  box-shadow: 0 0 20px -4px var(--glow-amethyst);
 }
 
 .glow-jade {
-  box-shadow: 0 0 20px -4px rgba(52, 211, 153, 0.2);
+  box-shadow: 0 0 20px -4px var(--glow-jade);
 }
 
-/* Active navigation glow */
+/* ══════════════════════════════════════════════
+   Active navigation glow
+   ══════════════════════════════════════════════ */
 .nav-glow {
   position: relative;
 }
@@ -121,10 +155,12 @@
   height: 3px;
   border-radius: 2px;
   background: var(--amber-gold);
-  box-shadow: 0 0 12px 2px rgba(232, 168, 50, 0.4);
+  box-shadow: 0 0 12px 2px var(--glow-gold);
 }
 
-/* Hide scrollbar utility */
+/* ══════════════════════════════════════════════
+   Scrollbar
+   ══════════════════════════════════════════════ */
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -134,7 +170,6 @@
   display: none;
 }
 
-/* Mobile-optimized scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -145,30 +180,36 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(107, 122, 153, 0.3);
+  background: rgba(139, 155, 185, 0.3);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(107, 122, 153, 0.5);
+  background: rgba(139, 155, 185, 0.5);
 }
 
-/* Safe area for mobile bottom nav */
+/* ══════════════════════════════════════════════
+   Safe area for mobile bottom nav
+   ══════════════════════════════════════════════ */
 .pb-safe {
   padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
 }
 
-/* Chip/tag selection styles */
+/* ══════════════════════════════════════════════
+   Chip/tag selection styles
+   ══════════════════════════════════════════════ */
 .chip-selected {
   @apply bg-amber-500/15 border-amber-500/60 text-amber-200;
-  box-shadow: 0 0 12px -2px rgba(232, 168, 50, 0.2);
+  box-shadow: 0 0 12px -2px var(--glow-gold);
 }
 
 .chip-idle {
   @apply bg-slate-900/60 border-slate-700/60 text-slate-400;
 }
 
-/* Smooth page transitions */
+/* ══════════════════════════════════════════════
+   Page transitions
+   ══════════════════════════════════════════════ */
 .page-enter {
   animation: fadeSlideUp 0.3s ease-out both;
 }
@@ -184,7 +225,29 @@
   }
 }
 
-/* Override Toastify for dark theme */
+/* ══════════════════════════════════════════════
+   Skeleton loading animation
+   ══════════════════════════════════════════════ */
+.skeleton {
+  @apply bg-slate-800/60 rounded-xl;
+  background: linear-gradient(
+    90deg,
+    rgba(30, 40, 60, 0.4) 25%,
+    rgba(50, 60, 85, 0.5) 50%,
+    rgba(30, 40, 60, 0.4) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ══════════════════════════════════════════════
+   Toastify overrides (dark theme)
+   ══════════════════════════════════════════════ */
 .Toastify__toast-container {
   z-index: 9999 !important;
 }
@@ -194,7 +257,52 @@
 .Toastify__toast--error,
 .Toastify__toast--info {
   background: var(--midnight) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid var(--glass-border) !important;
   border-radius: 12px !important;
   color: var(--moonlight) !important;
+}
+
+/* ══════════════════════════════════════════════
+   Reduced motion (WCAG 2.3.3)
+   ══════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .page-enter {
+    animation: none;
+  }
+
+  .skeleton {
+    animation: none;
+    background: rgba(30, 40, 60, 0.5);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   Form validation states
+   ══════════════════════════════════════════════ */
+.field-error {
+  color: var(--coral);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  margin-top: 0.375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.input-error {
+  border-color: rgba(248, 113, 113, 0.5);
+}
+
+.input-error:focus {
+  border-color: rgba(248, 113, 113, 0.7);
+  --tw-ring-color: rgba(248, 113, 113, 0.2);
 }
