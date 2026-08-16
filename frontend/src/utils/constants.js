@@ -8,6 +8,16 @@ export const DIAS_SEMANA = {
   domingo: 'Domingo',
 };
 
+export const DIA_SHORT = {
+  segunda: 'Seg',
+  terca: 'Ter',
+  quarta: 'Qua',
+  quinta: 'Qui',
+  sexta: 'Sex',
+  sabado: 'Sáb',
+  domingo: 'Dom',
+};
+
 export const TURNOS = {
   manha: 'Manhã',
   tarde: 'Tarde',
