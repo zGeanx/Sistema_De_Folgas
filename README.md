@@ -1,6 +1,8 @@
 # 🔮 Sistema de Escalas de Folga
 
-Sistema web completo para gerenciamento de solicitações de folgas para cartomantes, com autenticação JWT, validações de regras de negócio e interface moderna.
+Sistema web completo para gerenciamento de solicitações de folgas para cartomantes, com separação de rotas para cartomantes (mobile-first) e administradores, interface com estética cósmica, validações de regras de negócio e dashboard em tempo real.
+
+---
 
 ## 🚀 Tecnologias
 
@@ -13,35 +15,43 @@ Sistema web completo para gerenciamento de solicitações de folgas para cartoma
 - **CORS Headers** - Configuração de CORS
 
 ### Frontend
-- **React 19** - Biblioteca UI
-- **Axios** - Cliente HTTP
-- **React Toastify** - Notificações
-- **React Modal** - Modais customizados
-- **CSS Modules** - Estilos isolados
+- **React 19** - Biblioteca de UI
+- **Vite** - Bundler ultrarrápido de desenvolvimento e build
+- **React Router DOM 7** - Roteamento client-side com separação de páginas
+- **TailwindCSS 3** - Framework de estilização com Design System customizado
+- **shadcn/ui (Radix UI)** - Componentes de interface acessíveis e componíveis
+- **Lucide React** - Biblioteca de ícones
+- **Axios** - Cliente HTTP com interceptors para renovação de token JWT
+- **React Toastify** - Notificações toast estilizadas
+
+---
 
 ## ✨ Funcionalidades
 
-### Usuários
-- ✅ Registro e autenticação via JWT
-- ✅ Perfil de usuário
-- ✅ Renovação automática de tokens
+### 📱 Portal das Cartomantes (`/`) — *Mobile-First*
+- ✅ **Marcação Rápida de Folga**: Formulário touch-friendly com seleção intuitiva de dias em grade e cards de turnos (Manhã, Tarde, Noite).
+- ✅ **Confirmação Visual**: Modal de confirmação antes do envio da solicitação.
+- ✅ **Minha Escala**: Visualização em formato de cards da grade semanal de escalas aprovadas.
+- ✅ **Bottom Navigation**: Barra de navegação inferior com efeito luminoso para alternar entre *Marcar Folga* e *Minha Escala*.
+- ✅ **Responsivo**: Perfeita adaptação tanto em telas de celulares quanto em desktops.
 
-### Solicitações de Folga
-- ✅ Criar solicitação de folga (dia da semana + turno)
-- ✅ Visualizar minhas solicitações
-- ✅ Validação de limite de folgas por semana
-- ✅ Prevenção de duplicatas
+### 🛡️ Portal Administrativo / Gestão (`/admin`)
+- ✅ **Dashboard com KPIs em Tempo Real**: Total de solicitações, pendentes, aprovadas, recusadas e quantidade de cartomantes na escala.
+- ✅ **Gestão Completa de Solicitações**: Aprovar, recusar e excluir solicitações de folga em 1 clique.
+- ✅ **Filtros e Busca**: Busca instantânea por nome da cartomante e filtros por status (Todas, Pendente, Aprovada, Recusada).
+- ✅ **Grade Semanal Consolidada**: Visualização tabular da distribuição de escalas e folgas de todas as cartomantes da semana.
+- ✅ **Sidebar Retrátil**: Menu lateral moderno para desktop e bottom nav dedicada no mobile.
 
-### Gestores/Admin
-- ✅ Aprovar ou recusar solicitações
-- ✅ Visualizar todas as solicitações
-- ✅ Dashboard com estatísticas
-- ✅ Observações nas recusas
+---
 
-### Escala da Semana
-- ✅ Visualização em tabela da escala completa
-- ✅ Mostra folgas aprovadas por cartomante/turno
-- ✅ Atualização em tempo real
+## 🧭 Rotas da Aplicação
+
+| Rota | Descrição | Público |
+|------|-----------|---------|
+| `/` | Portal do Cartomante (Marcar Folga + Escala Semanal) | Cartomantes |
+| `/admin` | Painel Administrativo (Dashboard + Gestão + Escala) | Gestores / Admins |
+
+---
 
 ## 📋 Pré-requisitos
 
@@ -50,23 +60,25 @@ Sistema web completo para gerenciamento de solicitações de folgas para cartoma
 - **pip** (gerenciador de pacotes Python)
 - **npm** (gerenciador de pacotes Node)
 
-## 🔧 Instalação
+---
+
+## 🔧 Instalação e Execução
 
 ### 1. Clonar o Repositório
 
 ```bash
-git clone https://github.com/seu-usuario/Sistema_De_Folgas.git
-cd Sistema_De_Folgas-1
+git clone https://github.com/zGeanx/Sistema_De_Folgas.git
+cd Sistema_De_Folgas
 ```
 
-### 2. Configurar Backend
+### 2. Configurar Backend (Django)
 
 ```bash
 # Criar ambiente virtual
 python -m venv venv
 
 # Ativar ambiente virtual
-# Windows:
+# Windows (PowerShell / CMD):
 venv\Scripts\activate
 # Linux/Mac:
 source venv/bin/activate
@@ -75,24 +87,22 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # Criar arquivo .env (copiar do .env.example)
-copy .env.example .env  # Windows
-# cp .env.example .env  # Linux/Mac
+copy .env.example .env   # Windows
+# cp .env.example .env   # Linux/Mac
 
-# Editar .env e configurar SECRET_KEY
-
-# Executar migrações
+# Executar migrações do banco
 python manage.py migrate
 
-# Criar superusuário (admin)
+# Criar superusuário (opcional)
 python manage.py createsuperuser
 
-# Iniciar servidor
+# Iniciar servidor de desenvolvimento
 python manage.py runserver
 ```
 
-O backend estará disponível em: `http://localhost:8000`
+> O backend estará acessível em: `http://localhost:8000`
 
-### 3. Configurar Frontend
+### 3. Configurar Frontend (React + Vite)
 
 ```bash
 cd frontend
@@ -100,15 +110,13 @@ cd frontend
 # Instalar dependências
 npm install
 
-# Criar arquivo .env (copiar do .env.example)
-copy .env.example .env  # Windows
-# cp .env.example .env  # Linux/Mac
-
-# Iniciar servidor de desenvolvimento
-npm start
+# Iniciar servidor de desenvolvimento (Vite)
+npm run dev
 ```
 
-O frontend estará disponível em: `http://localhost:3000`
+> O frontend estará acessível em: `http://localhost:3000`
+
+---
 
 ## 🐳 Docker (Opcional)
 
@@ -123,6 +131,8 @@ docker-compose exec backend python manage.py migrate
 docker-compose exec backend python manage.py createsuperuser
 ```
 
+---
+
 ## 📚 Documentação da API
 
 ### Autenticação
@@ -130,133 +140,87 @@ docker-compose exec backend python manage.py createsuperuser
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
 | POST | `/api/auth/register/` | Registrar novo usuário |
-| POST | `/api/auth/login/` | Login (retorna tokens) |
-| POST | `/api/auth/logout/` | Logout |
+| POST | `/api/auth/login/` | Login (retorna JWT access/refresh) |
+| POST | `/api/auth/logout/` | Logout e invalidação de token |
 | POST | `/api/auth/token/refresh/` | Renovar access token |
-| GET | `/api/auth/me/` | Obter perfil do usuário |
+| GET | `/api/auth/me/` | Obter perfil do usuário logado |
 
 ### Solicitações de Folga
 
-| Método | Endpoint | Descrição | Permissão |
-|--------|----------|-----------|-----------|
-| GET | `/api/solicitacoes/` | Listar solicitações | Autenticado |
-| POST | `/api/solicitacoes/` | Criar solicitação | Autenticado |
-| GET | `/api/solicitacoes/{id}/` | Detalhes da solicitação | Autenticado |
-| PUT/PATCH | `/api/solicitacoes/{id}/` | Atualizar solicitação | Dono ou Admin |
-| DELETE | `/api/solicitacoes/{id}/` | Deletar solicitação | Dono ou Admin |
-| POST | `/api/solicitacoes/{id}/aprovar/` | Aprovar folga | Admin |
-| POST | `/api/solicitacoes/{id}/recusar/` | Recusar folga | Admin |
-| GET | `/api/solicitacoes/minhas_folgas/` | Minhas solicitações | Autenticado |
-| GET | `/api/solicitacoes/estatisticas/` | Dashboard stats | Autenticado |
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/api/solicitacoes/` | Listar todas as solicitações |
+| POST | `/api/solicitacoes/` | Criar nova solicitação de folga |
+| GET | `/api/solicitacoes/{id}/` | Obter detalhes da solicitação |
+| PATCH | `/api/solicitacoes/{id}/` | Atualizar dados/status da solicitação |
+| DELETE | `/api/solicitacoes/{id}/` | Remover solicitação |
 
-### Exemplo de Uso
-
-```bash
-# 1. Registrar
-curl -X POST http://localhost:8000/api/auth/register/ \
-  -H "Content-Type: application/json" \
-  -d '{"username":"cartomante","password":"senha123","email":"teste@email.com"}'
-
-# 2. Login
-curl -X POST http://localhost:8000/api/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{"username":"cartomante","password":"senha123"}'
-
-# 3. Criar solicitação de folga (use o access token)
-curl -X POST http://localhost:8000/api/solicitacoes/ \
-  -H "Authorization: Bearer SEU_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"cartomante_nome":"Madame Zelda","dia_semana":"segunda","turno":"manha"}'
-
-# 4. Listar solicitações
-curl -X GET http://localhost:8000/api/solicitacoes/ \
-  -H "Authorization: Bearer SEU_ACCESS_TOKEN"
-```
-
-## 🧪 Testes
-
-### Backend
-
-```bash
-# Executar todos os testes
-python manage.py test
-
-# Executar com coverage
-coverage run --source='.' manage.py test
-coverage report
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm test
-```
+---
 
 ## 📁 Estrutura do Projeto
 
 ```
-Sistema_De_Folgas-1/
-├── config/                 # Configurações Django
-│   ├── settings/          # Settings por ambiente
-│   │   ├── base.py
-│   │   ├── development.py
-│   │   └── production.py
-│   ├── urls.py
-│   └── wsgi.py
-├── apps/
-│   ├── escala/            # App de escalas de folga
-│   │   ├── api/          # API REST
-│   │   └── models.py
-│   └── users/            # App de autenticação
-├── frontend/
+Sistema_De_Folgas/
+├── escala/                       # App Django de gestão de escalas
+│   ├── migrations/               # Migrações do banco de dados
+│   ├── models.py                 # Modelo SolicitacaoFolga
+│   ├── serializers.py            # Serializers DRF
+│   ├── urls.py                   # Rotas da API
+│   └── views.py                  # ViewSet de solicitações
+├── config/                       # Configurações do projeto Django
+│   ├── settings.py               # Configurações gerais, CORS e JWT
+│   └── urls.py                   # URLs base do projeto
+├── frontend/                     # Aplicação React (Vite)
+│   ├── public/                   # Arquivos estáticos
 │   ├── src/
-│   │   ├── components/   # Componentes React
-│   │   ├── pages/        # Páginas
-│   │   ├── services/     # Serviços API
-│   │   ├── hooks/        # Custom hooks
-│   │   ├── contexts/     # React contexts
-│   │   └── utils/        # Utilitários
-│   └── public/
-├── tests/                # Testes backend
-├── manage.py
-├── requirements.txt
-└── docker-compose.yml
+│   │   ├── components/
+│   │   │   ├── admin/            # DashboardStats, cards de KPIs
+│   │   │   ├── formulario/       # FormularioFolga mobile-first
+│   │   │   ├── gestao/           # SolicitacoesGestao (aprovação/recusa)
+│   │   │   ├── layout/           # Header, BottomNav, AdminSidebar
+│   │   │   ├── tabela/           # TabelaEscala (cards / grade semanal)
+│   │   │   └── ui/               # Componentes shadcn/ui (Button, Dialog, etc.)
+│   │   ├── contexts/             # AuthContext
+│   │   ├── hooks/                # useFolgas
+│   │   ├── lib/                  # Utilitários shadcn (cn)
+│   │   ├── pages/
+│   │   │   ├── CartomantePage.jsx # Página principal do Cartomante
+│   │   │   └── AdminPage.jsx      # Painel de Administração
+│   │   ├── services/             # Axios client, auth.service, folgas.service
+│   │   ├── utils/                # Constantes e formatadores
+│   │   ├── App.jsx               # Roteador principal com React Router
+│   │   ├── main.jsx              # Ponto de entrada React com BrowserRouter
+│   │   └── index.css             # Design tokens e temas cósmicos
+│   ├── components.json           # Configuração do shadcn/ui
+│   ├── index.html                # Template HTML com meta tags mobile
+│   ├── package.json              # Dependências e scripts
+│   ├── tailwind.config.js        # Tokens de cores, animações e breakpoints
+│   └── vite.config.js            # Configuração do Vite e aliases (@/)
+├── manage.py                     # CLI Django
+├── requirements.txt              # Dependências Python
+└── docker-compose.yml            # Orquestração Docker
 ```
 
-## 🔐 Segurança
+---
 
-- ✅ Autenticação JWT com refresh tokens
-- ✅ Validação de permissões por endpoint
-- ✅ CORS configurado adequadamente
-- ✅ Senhas hasheadas com Django
-- ✅ Validações de dados no backend
-- ✅ Proteção contra duplicatas
+## 🎨 Design System
 
-## 🚀 Deploy
+- **Paleta de Cores Cósmica**: Obsidian (`#0B0E17`), Midnight (`#131825`), Twilight (`#1A2035`), com acentos em Amber Gold (`#E8A832`), Amethyst (`#9B6DFF`), Jade (`#34D399`) e Coral (`#F87171`).
+- **Tipografia**: *Plus Jakarta Sans* para legibilidade de interface e *Cinzel* para títulos místicos.
+- **Micro-interações**: Efeitos de iluminação ambiente, glow suave na navegação e transições fluídas.
 
-### Backend (Render/Railway/Heroku)
-
-1. Configure as variáveis de ambiente
-2. Configure o banco PostgreSQL
-3. Execute as migrations
-4. Crie um superusuário
-5. Colete arquivos estáticos: `python manage.py collectstatic`
-
-### Frontend (Vercel/Netlify)
-
-1. Configure `REACT_APP_API_URL` para apontar ao backend em produção
-2. Build: `npm run build`
-3. Deploy da pasta `build/`
+---
 
 ## 🤝 Contribuindo
 
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
+1. Faça um Fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/MinhaFeature`)
+3. Commit suas mudanças (`git commit -m 'feat: add nova feature'`)
+4. Faça o Push para a branch (`git push origin feature/MinhaFeature`)
 5. Abra um Pull Request
 
+---
 
-- Django e React communities
-- Todos os contribuidores do projeto
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Consulte o arquivo de licença para mais detalhes.
