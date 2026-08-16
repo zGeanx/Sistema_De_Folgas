@@ -103,7 +103,6 @@ export function AdminPage() {
               folgas={folgas}
               loading={loading}
               onRefresh={carregarFolgas}
-              variant="admin"
             />
           </div>
         );
