@@ -62,10 +62,10 @@ export function DashboardStats({ folgas = [] }) {
           >
             <div className="flex items-center gap-2.5 mb-3">
               <div className={`p-2 rounded-xl ${stat.bg} ${stat.color} border ${stat.borderColor}`}>
-                <Icon className="w-4 h-4" />
+                <Icon className="w-4 h-4" aria-hidden="true" />
               </div>
             </div>
-            <div className="text-2xl font-bold text-moonlight tracking-tight">
+            <div className="text-2xl font-bold text-moonlight tracking-tight tabular-nums font-mono">
               {stat.value}
             </div>
             <div className="text-xs text-silver-mist mt-0.5 font-medium">
