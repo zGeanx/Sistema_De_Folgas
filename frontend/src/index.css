@@ -97,6 +97,11 @@
   .touch-compact {
     min-height: unset;
   }
+
+  /* Previne auto-zoom indesejado no iOS Safari ao focar em inputs */
+  input, select, textarea {
+    font-size: 16px;
+  }
 }
 
 /* ══════════════════════════════════════════════
