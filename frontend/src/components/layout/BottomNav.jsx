@@ -16,8 +16,12 @@ export function BottomNav({ activeTab, onTabChange }) {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 glass-elevated border-t border-white/[0.06]"
-         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 glass-elevated border-t border-white/[0.06]"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      role="navigation"
+      aria-label="Navegação principal"
+    >
       <div className="flex items-stretch">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -36,7 +40,7 @@ export function BottomNav({ activeTab, onTabChange }) {
               aria-current={isActive ? 'page' : undefined}
             >
               <div className="relative">
-                <Icon className={`w-5 h-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
+                <Icon className={`w-5 h-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} aria-hidden="true" />
                 {isActive && (
                   <div className="absolute -inset-2 bg-amber-gold/10 rounded-full blur-md animate-glow-pulse" />
                 )}
