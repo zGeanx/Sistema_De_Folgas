@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { DIAS_SEMANA, TURNOS, DIA_SHORT } from '@/utils/constants';
+import { DIAS_SEMANA, DIA_SHORT } from '@/utils/constants';
 
 const TURNOS_CONFIG = {
   manha: {
