@@ -50,14 +50,14 @@ export function AdminPage() {
         return (
           <div className="space-y-6 page-enter">
             <div>
-              <h2 className="text-lg font-bold text-moonlight">Visão Geral</h2>
-              <p className="text-xs text-silver-mist mt-0.5">Resumo de todas as solicitações de folga</p>
+              <h2 className="text-lg font-heading text-moonlight">Visão Geral</h2>
+              <p className="text-xs text-silver-mist mt-1">Resumo de todas as solicitações de folga</p>
             </div>
             <DashboardStats folgas={folgas} />
 
             {/* Recent pending */}
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-moonlight">Pendentes recentes</h3>
+              <h3 className="text-base font-heading text-moonlight">Pendentes recentes</h3>
               {folgas.filter((f) => f.status === 'pendente').length === 0 ? (
                 <div className="glass rounded-2xl border border-white/[0.06] p-6 text-center">
                   <p className="text-xs text-silver-mist">Nenhuma solicitação pendente no momento.</p>
@@ -77,10 +77,10 @@ export function AdminPage() {
 
       case 'solicitacoes':
         return (
-          <div className="space-y-4 page-enter">
+          <div className="space-y-6 page-enter">
             <div>
-              <h2 className="text-lg font-bold text-moonlight">Todas as Solicitações</h2>
-              <p className="text-xs text-silver-mist mt-0.5">Gerencie aprovações e recusas de folgas</p>
+              <h2 className="text-lg font-heading text-moonlight">Todas as Solicitações</h2>
+              <p className="text-xs text-silver-mist mt-1">Gerencie aprovações e recusas de folgas</p>
             </div>
             <SolicitacoesGestao
               folgas={folgas}
@@ -94,10 +94,10 @@ export function AdminPage() {
 
       case 'escala':
         return (
-          <div className="space-y-4 page-enter">
+          <div className="space-y-6 page-enter">
             <div>
-              <h2 className="text-lg font-bold text-moonlight">Escala Semanal</h2>
-              <p className="text-xs text-silver-mist mt-0.5">Folgas aprovadas consolidadas por cartomante</p>
+              <h2 className="text-lg font-heading text-moonlight">Escala Semanal</h2>
+              <p className="text-xs text-silver-mist mt-1">Folgas aprovadas consolidadas por cartomante</p>
             </div>
             <TabelaEscala
               folgas={folgas}
@@ -122,14 +122,18 @@ export function AdminPage() {
       <div className="flex-1 flex flex-col min-h-screen">
         <Header variant="admin" />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-20 lg:pb-8 max-w-5xl">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-5xl mx-auto w-full">
           {renderContent()}
         </main>
       </div>
 
       {/* Mobile Bottom Nav (admin version) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-elevated border-t border-white/[0.06] lg:hidden"
-           style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-50 glass-elevated border-t border-white/[0.06] lg:hidden"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        role="navigation"
+        aria-label="Navegação administrativa"
+      >
         <div className="flex items-stretch">
           {MOBILE_NAV_ITEMS.map((item) => {
             const Icon = item.icon;
@@ -139,11 +143,13 @@ export function AdminPage() {
               <button
                 key={item.id}
                 onClick={() => setActiveSection(item.id)}
+                aria-label={item.label}
+                aria-current={isActive ? 'page' : undefined}
                 className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 px-2 transition-all duration-200 relative ${
                   isActive ? 'text-amber-gold' : 'text-silver-mist'
                 }`}
               >
-                <Icon className={`w-5 h-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
+                <Icon className={`w-5 h-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} aria-hidden="true" />
                 <span className={`text-[10px] font-semibold ${isActive ? 'text-amber-gold' : ''}`}>
                   {item.label}
                 </span>
