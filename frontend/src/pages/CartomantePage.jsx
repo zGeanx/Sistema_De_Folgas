@@ -46,7 +46,6 @@ export function CartomantePage() {
               folgas={folgas}
               loading={loading}
               onRefresh={carregarFolgas}
-              variant="cartomante"
             />
           )}
         </main>
