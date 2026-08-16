@@ -32,6 +32,14 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
             )
         serializer.save(usuario=user)
 
+    def perform_update(self, serializer):
+        instance = serializer.instance
+        novo_status = serializer.validated_data.get('status', instance.status)
+        if novo_status in ['aprovada', 'recusada'] and novo_status != instance.status:
+            serializer.save(data_acao=timezone.now())
+        else:
+            serializer.save()
+
     @action(detail=True, methods=['post'], permission_classes=[permissions.AllowAny])
     def aprovar(self, request, pk=None):
         folga = self.get_object()
