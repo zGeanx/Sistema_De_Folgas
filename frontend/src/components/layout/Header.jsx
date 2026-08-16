@@ -22,15 +22,17 @@ export function Header({ variant = 'cartomante' }) {
 
   if (variant === 'admin') {
     return (
-      <header className="px-4 sm:px-6 py-4 border-b border-white/[0.06] glass">
+      <header className="px-4 sm:px-6 lg:px-8 py-4 border-b border-white/[0.06] glass">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-bold text-moonlight">Painel Administrativo</h1>
-            <p className="text-xs text-silver-mist capitalize">{formattedDate}</p>
+            <h1 className="text-xl font-heading text-moonlight tracking-tight">
+              Painel Administrativo
+            </h1>
+            <p className="text-xs text-silver-mist capitalize mt-0.5">{formattedDate}</p>
           </div>
-          <div className="glass rounded-xl px-3 py-1.5 flex items-center gap-2 text-xs text-silver-mist border border-white/[0.06]">
-            <Clock className="w-3.5 h-3.5 text-amber-gold" />
-            <span className="font-mono text-moonlight">{formattedTime}</span>
+          <div className="glass rounded-xl px-3 py-2 flex items-center gap-2 text-xs text-silver-mist border border-white/[0.06]">
+            <Clock className="w-3.5 h-3.5 text-amber-gold" aria-hidden="true" />
+            <span className="font-mono text-moonlight tabular-nums">{formattedTime}</span>
           </div>
         </div>
       </header>
@@ -43,19 +45,19 @@ export function Header({ variant = 'cartomante' }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-gold/20 to-amethyst/20 border border-amber-gold/25 flex items-center justify-center">
-            <Moon className="w-5 h-5 text-amber-gold animate-float" />
+            <Moon className="w-5 h-5 text-amber-gold animate-float" aria-hidden="true" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-moonlight tracking-tight font-heading">
+            <h1 className="text-lg font-heading text-moonlight tracking-tight">
               Folgas
             </h1>
             <p className="text-[11px] text-silver-mist capitalize">{formattedDate}</p>
           </div>
         </div>
 
-        <div className="glass rounded-xl px-3 py-1.5 flex items-center gap-1.5 text-xs border border-white/[0.06]">
-          <Calendar className="w-3.5 h-3.5 text-amber-gold" />
-          <span className="font-mono text-moonlight text-[11px]">{formattedTime}</span>
+        <div className="glass rounded-xl px-3 py-2 flex items-center gap-1.5 text-xs border border-white/[0.06]">
+          <Calendar className="w-3.5 h-3.5 text-amber-gold" aria-hidden="true" />
+          <span className="font-mono text-moonlight text-[11px] tabular-nums">{formattedTime}</span>
         </div>
       </div>
     </header>
