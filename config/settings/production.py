@@ -1,7 +1,7 @@
 import dj_database_url
 from .base import *
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
