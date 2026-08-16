@@ -18,7 +18,7 @@ const TURNO_COLORS = {
   noite: { text: 'text-amethyst', bg: 'bg-amethyst/10', border: 'border-amethyst/30' },
 };
 
-export function TabelaEscala({ folgas = [], loading = false, onRefresh, variant = 'cartomante' }) {
+export function TabelaEscala({ folgas = [], loading = false, onRefresh }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTurnoFilter, setSelectedTurnoFilter] = useState('todos');
 
