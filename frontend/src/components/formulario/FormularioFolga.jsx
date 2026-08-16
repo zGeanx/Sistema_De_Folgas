@@ -120,7 +120,7 @@ export function FormularioFolga({ onFolgaCreated }) {
             autoComplete="name"
             aria-describedby={hasNomeError ? 'nome-error' : undefined}
             aria-invalid={hasNomeError ? 'true' : undefined}
-            className={`bg-midnight border-white/[0.08] text-moonlight placeholder:text-silver-mist/60 focus:border-amber-gold/50 focus:ring-amber-gold/20 h-12 text-sm rounded-xl px-4 ${
+            className={`bg-midnight border-white/[0.08] text-moonlight placeholder:text-silver-mist/60 focus:border-amber-gold/50 focus:ring-amber-gold/20 h-12 text-base sm:text-sm rounded-xl px-4 ${
               hasNomeError ? 'input-error' : ''
             }`}
           />
