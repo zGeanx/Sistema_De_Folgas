@@ -24,15 +24,9 @@ export const TURNOS = {
   noite: 'Noite',
 };
 
-export const STATUS = {
-  pendente: 'Pendente',
-  aprovada: 'Aprovada',
-  recusada: 'Recusada',
-};
-
 export const DIAS_ARRAY = Object.keys(DIAS_SEMANA);
 export const TURNOS_ARRAY = Object.keys(TURNOS);
-export const STATUS_ARRAY = Object.keys(STATUS);
+
 export const API_ENDPOINTS = {
   LOGIN: '/auth/login/',
   REGISTER: '/auth/register/',
@@ -40,8 +34,6 @@ export const API_ENDPOINTS = {
   REFRESH_TOKEN: '/auth/token/refresh/',
   USER_PROFILE: '/auth/me/',
   SOLICITACOES: '/solicitacoes/',
-  MINHAS_FOLGAS: '/solicitacoes/minhas_folgas/',
-  ESTATISTICAS: '/solicitacoes/estatisticas/',
 };
 
 export const STORAGE_KEYS = {
