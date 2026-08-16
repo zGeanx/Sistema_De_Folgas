@@ -44,18 +44,24 @@ export function AdminPage() {
     await carregarFolgas();
   };
 
-  const renderContent = () => {
-    switch (activeSection) {
-      case 'dashboard':
-        return (
-          <div className="space-y-6 page-enter">
+  return (
+    <div className="min-h-screen bg-obsidian text-moonlight flex">
+      {/* Desktop Sidebar */}
+      <AdminSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
+
+      {/* Main Area */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        <Header variant="admin" />
+
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-5xl mx-auto w-full">
+          {/* Dashboard Section */}
+          <div className={`space-y-6 ${activeSection === 'dashboard' ? 'block' : 'hidden'}`}>
             <div>
               <h2 className="text-lg font-heading text-moonlight">Visão Geral</h2>
               <p className="text-xs text-silver-mist mt-1">Resumo de todas as solicitações de folga</p>
             </div>
             <DashboardStats folgas={folgas} />
 
-            {/* Recent pending */}
             <div className="space-y-3">
               <h3 className="text-base font-heading text-moonlight">Pendentes recentes</h3>
               {folgas.filter((f) => f.status === 'pendente').length === 0 ? (
@@ -73,11 +79,9 @@ export function AdminPage() {
               )}
             </div>
           </div>
-        );
 
-      case 'solicitacoes':
-        return (
-          <div className="space-y-6 page-enter">
+          {/* Solicitacoes Section */}
+          <div className={`space-y-6 ${activeSection === 'solicitacoes' ? 'block' : 'hidden'}`}>
             <div>
               <h2 className="text-lg font-heading text-moonlight">Todas as Solicitações</h2>
               <p className="text-xs text-silver-mist mt-1">Gerencie aprovações e recusas de folgas</p>
@@ -90,11 +94,9 @@ export function AdminPage() {
               loading={loading}
             />
           </div>
-        );
 
-      case 'escala':
-        return (
-          <div className="space-y-6 page-enter">
+          {/* Escala Section */}
+          <div className={`space-y-6 ${activeSection === 'escala' ? 'block' : 'hidden'}`}>
             <div>
               <h2 className="text-lg font-heading text-moonlight">Escala Semanal</h2>
               <p className="text-xs text-silver-mist mt-1">Folgas aprovadas consolidadas por cartomante</p>
@@ -105,24 +107,6 @@ export function AdminPage() {
               onRefresh={carregarFolgas}
             />
           </div>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-obsidian text-moonlight flex">
-      {/* Desktop Sidebar */}
-      <AdminSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
-
-      {/* Main Area */}
-      <div className="flex-1 flex flex-col min-h-screen">
-        <Header variant="admin" />
-
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-5xl mx-auto w-full">
-          {renderContent()}
         </main>
       </div>
 
