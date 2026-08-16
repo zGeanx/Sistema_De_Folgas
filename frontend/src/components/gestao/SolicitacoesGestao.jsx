@@ -260,7 +260,7 @@ export function SolicitacoesGestao({
         open={confirmDialog.open}
         onOpenChange={(open) => !open && setConfirmDialog({ open: false, type: null, folga: null })}
       >
-        <DialogContent className="glass border-white/[0.1] text-moonlight max-w-sm mx-4 rounded-2xl">
+        <DialogContent className="glass border-white/[0.1] text-moonlight w-[calc(100%-2rem)] sm:w-full max-w-sm rounded-2xl">
           {confirmDialog.type && confirmConfig[confirmDialog.type] && (() => {
             const cfg = confirmConfig[confirmDialog.type];
             const Icon = cfg.icon;
