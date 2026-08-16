@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <!-- Gradiente de Fundo Noturno Cósmico -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1A2035" />
+      <stop offset="100%" stop-color="#0B0E17" />
+    </radialGradient>
+    
+    <!-- Gradiente Ouro Místico para a Lua -->
+    <linearGradient id="goldMoon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+
+    <!-- Gradiente Ametista para a Estrela -->
+    <linearGradient id="amethystStar" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#C084FC" />
+      <stop offset="100%" stop-color="#9333EA" />
+    </linearGradient>
+
+    <!-- Brilho Dourado -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Fundo do Ícone (Squircle moderno) -->
+  <rect width="64" height="64" rx="16" fill="url(#bgGrad)" stroke="#F59E0B" stroke-width="1.5" stroke-opacity="0.35" />
+
+  <!-- Lua Crescente Mística -->
+  <path
+    d="M38 14C26.9543 14 18 22.9543 18 34C18 45.0457 26.9543 54 38 54C42.2356 54 46.1683 52.6841 49.394 50.4397C47.288 51.134 45.0315 51.5 42.6923 51.5C30.4357 51.5 20.5 41.5643 20.5 29.3077C20.5 22.4283 23.6301 16.2798 28.5303 12.2235C26.0694 13.3768 31.8488 14 38 14Z"
+    fill="url(#goldMoon)"
+    filter="url(#glow)"
+  />
+
+  <!-- Estrela Mística Principal (4 pontas) -->
+  <path
+    d="M45 20C45 25 40 25 40 25C40 25 45 25 45 30C45 25 50 25 50 25C50 25 45 25 45 20Z"
+    fill="url(#amethystStar)"
+  />
+
+  <!-- Estrela Secundária Menor -->
+  <circle cx="34" cy="22" r="1.5" fill="#FCD34D" opacity="0.9" />
+  <circle cx="48" cy="38" r="1.2" fill="#C084FC" opacity="0.8" />
+</svg>
