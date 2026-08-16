@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Moon, Sun, Sunset, Calendar, RefreshCw, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,29 +22,36 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTurnoFilter, setSelectedTurnoFilter] = useState('todos');
 
-  // Filter only approved folgas for the schedule
-  const folgasAprovadas = folgas.filter(
-    (f) => f.status === 'aprovada' || !f.status
-  );
+  // Filter only approved folgas for the schedule (memorizado)
+  const folgasAprovadas = useMemo(() => {
+    return folgas.filter((f) => f.status === 'aprovada' || !f.status);
+  }, [folgas]);
 
-  // Extract unique cartomantes
-  const allCartomantes = [...new Set(folgas.map((f) => f.cartomante_nome))].filter(Boolean);
+  // Extract unique cartomantes (memorizado)
+  const allCartomantes = useMemo(() => {
+    return [...new Set(folgas.map((f) => f.cartomante_nome))].filter(Boolean);
+  }, [folgas]);
 
-  // Filter by search
-  const filteredCartomantes = allCartomantes.filter((nome) =>
-    nome.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter by search (memorizado)
+  const filteredCartomantes = useMemo(() => {
+    return allCartomantes.filter((nome) =>
+      nome.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [allCartomantes, searchTerm]);
 
   // Filter turnos to show
   const visibleTurnos =
     selectedTurnoFilter === 'todos' ? TURNOS_ARRAY : [selectedTurnoFilter];
 
-  // Map approved folgas
-  const escalaMap = new Map();
-  folgasAprovadas.forEach((folga) => {
-    const key = `${folga.cartomante_nome}-${folga.dia_semana}-${folga.turno}`;
-    escalaMap.set(key, folga);
-  });
+  // Map approved folgas (memorizado)
+  const escalaMap = useMemo(() => {
+    const map = new Map();
+    folgasAprovadas.forEach((folga) => {
+      const key = `${folga.cartomante_nome}-${folga.dia_semana}-${folga.turno}`;
+      map.set(key, folga);
+    });
+    return map;
+  }, [folgasAprovadas]);
 
   // Skeleton loading
   const renderSkeleton = () => (
