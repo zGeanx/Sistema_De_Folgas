@@ -1,12 +1,25 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { CartomantePage } from './pages/CartomantePage';
 import { AdminPage } from './pages/AdminPage';
+import { AdminLoginPage } from './pages/AdminLoginPage';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+
+function ProtectedAdminRoute({ children }) {
+  const { isAdmin } = useAuth();
+  const location = useLocation();
+
+  if (!isAdmin) {
+    return <Navigate to="/admin/login" replace state={{ from: location }} />;
+  }
+
+  return children;
+}
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <Toaster
         position="top-center"
         theme="dark"
@@ -30,10 +43,11 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<CartomantePage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route path="/admin" element={<ProtectedAdminRoute><AdminPage /></ProtectedAdminRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </>
+    </AuthProvider>
   );
 }
 
