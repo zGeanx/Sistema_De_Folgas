@@ -49,7 +49,7 @@ export const useFolgas = () => {
 
   const aprovarFolga = useCallback(async (id) => {
     try {
-      await folgasService.updateFolga(id, { status: 'aprovada' });
+      await folgasService.aprovarFolga(id);
       setFolgas((prev) =>
         prev.map((f) => (f.id === id ? { ...f, status: 'aprovada' } : f))
       );
@@ -64,7 +64,7 @@ export const useFolgas = () => {
 
   const recusarFolga = useCallback(async (id) => {
     try {
-      await folgasService.updateFolga(id, { status: 'recusada' });
+      await folgasService.recusarFolga(id);
       setFolgas((prev) =>
         prev.map((f) => (f.id === id ? { ...f, status: 'recusada' } : f))
       );
