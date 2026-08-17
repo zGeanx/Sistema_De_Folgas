@@ -107,6 +107,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
     'DEFAULT_THROTTLE_RATES': {
         'registration': '5/hour',
+        'public_leave_request': '5/hour',
     },
 }
 
