@@ -51,6 +51,8 @@ class SolicitacaoFolgaSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'id',
             'usuario',
+            'status',
+            'observacao',
             'data_solicitacao',
             'data_acao',
             'aprovado_por',
