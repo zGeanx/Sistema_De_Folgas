@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, FileText, Calendar } from 'lucide-react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { LayoutDashboard, FileText, Calendar, RefreshCw } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { AdminSidebar } from '@/components/layout/AdminSidebar';
 import { DashboardStats } from '@/components/admin/DashboardStats';
 import { SolicitacoesGestao } from '@/components/gestao/SolicitacoesGestao';
 import { TabelaEscala } from '@/components/tabela/TabelaEscala';
 import { useFolgas } from '@/hooks/useFolgas';
-import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const MOBILE_NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -16,8 +15,6 @@ const MOBILE_NAV_ITEMS = [
 ];
 
 export function AdminPage() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const {
     folgas,
     loading,
@@ -28,29 +25,52 @@ export function AdminPage() {
   } = useFolgas();
 
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
+  // Carregamento inicial e sincronização em tempo real (Polling a cada 8s + Focus)
   useEffect(() => {
     carregarFolgas();
+
+    // Polling em segundo plano a cada 8 segundos
+    const interval = setInterval(() => {
+      carregarFolgas(true);
+    }, 8000);
+
+    // Atualiza imediatamente quando o usuário volta para a aba do navegador
+    const handleFocus = () => {
+      carregarFolgas(true);
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleFocus);
+    };
+  }, [carregarFolgas]);
+
+  // Atualização manual com feedback visual
+  const handleManualRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await carregarFolgas();
+    setTimeout(() => setIsRefreshing(false), 500);
   }, [carregarFolgas]);
 
   const handleAprovar = async (id) => {
     await aprovarFolga(id);
-    await carregarFolgas();
+    await carregarFolgas(true);
   };
 
   const handleRecusar = async (id) => {
     await recusarFolga(id);
-    await carregarFolgas();
+    await carregarFolgas(true);
   };
 
   const handleExcluir = async (id) => {
     await excluirFolga(id);
-    await carregarFolgas();
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/admin/login', { replace: true });
+    await carregarFolgas(true);
   };
 
   return (
@@ -60,9 +80,33 @@ export function AdminPage() {
 
       {/* Main Area */}
       <div className="flex-1 flex flex-col min-h-screen">
-        <Header variant="admin" user={user} onLogout={handleLogout} />
+        <Header variant="admin" />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-5xl mx-auto w-full">
+          {/* Top Bar with Live Sync indicator */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-jade opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-jade"></span>
+              </span>
+              <span className="text-[11px] text-silver-mist font-medium tracking-wide">
+                Sincronização em tempo real ativa
+              </span>
+            </div>
+
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleManualRefresh}
+              disabled={isRefreshing || loading}
+              className="h-8 px-2.5 text-xs bg-midnight border-white/[0.08] hover:bg-white/[0.04] text-silver-mist hover:text-moonlight rounded-xl gap-1.5"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-amber-gold' : ''}`} aria-hidden="true" />
+              <span>Atualizar</span>
+            </Button>
+          </div>
+
           {/* Dashboard Section */}
           <div className={`space-y-6 ${activeSection === 'dashboard' ? 'block' : 'hidden'}`}>
             <div>
