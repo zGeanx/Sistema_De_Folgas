@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Moon, Calendar, Clock } from 'lucide-react';
+import { Moon, Calendar, Clock, LogOut } from 'lucide-react';
 
-export function Header({ variant = 'cartomante' }) {
+export function Header({ variant = 'cartomante', user, onLogout }) {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -30,9 +30,21 @@ export function Header({ variant = 'cartomante' }) {
             </h1>
             <p className="text-xs text-silver-mist capitalize mt-0.5">{formattedDate}</p>
           </div>
-          <div className="glass rounded-xl px-3 py-2 flex items-center gap-2 text-xs text-silver-mist border border-white/[0.06]">
-            <Clock className="w-3.5 h-3.5 text-amber-gold" aria-hidden="true" />
-            <span className="font-mono text-moonlight tabular-nums">{formattedTime}</span>
+          <div className="flex items-center gap-2">
+            <div className="glass rounded-xl px-3 py-2 flex items-center gap-2 text-xs text-silver-mist border border-white/[0.06]">
+              <Clock className="w-3.5 h-3.5 text-amber-gold" aria-hidden="true" />
+              <span className="font-mono text-moonlight tabular-nums">{formattedTime}</span>
+            </div>
+            {onLogout && (
+              <button
+                type="button"
+                onClick={onLogout}
+                className="touch-compact h-9 px-3 rounded-xl border border-white/[0.08] text-xs text-silver-mist hover:text-moonlight hover:border-amber-gold/40 transition-colors flex items-center gap-1.5"
+              >
+                <LogOut className="w-3.5 h-3.5" aria-hidden="true" />
+                <span className="hidden sm:inline">Sair{user?.username ? ` (${user.username})` : ''}</span>
+              </button>
+            )}
           </div>
         </div>
       </header>
