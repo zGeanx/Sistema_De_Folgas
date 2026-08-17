@@ -100,12 +100,15 @@ export function TabelaEscala({ folgas = [], loading = false, onRefresh }) {
               <div className="divide-y divide-white/[0.04]">
                 {cartomanteFolgas
                   .filter((f) => selectedTurnoFilter === 'todos' || f.turno === selectedTurnoFilter)
-                  .map((folga) => {
+                  .map((folga, index) => {
                     const TurnoIcon = TURNO_ICONS[folga.turno] || Sun;
                     const turnoColor = TURNO_COLORS[folga.turno] || TURNO_COLORS.manha;
 
                     return (
-                      <div key={folga.id} className="px-4 py-3 flex items-center justify-between">
+                      <div
+                        key={`${folga.cartomante_nome}-${folga.dia_semana}-${folga.turno}-${index}`}
+                        className="px-4 py-3 flex items-center justify-between"
+                      >
                         <div className="flex items-center gap-3">
                           <div className={`p-1.5 rounded-lg ${turnoColor.bg} ${turnoColor.text}`}>
                             <TurnoIcon className="w-3.5 h-3.5" aria-hidden="true" />
