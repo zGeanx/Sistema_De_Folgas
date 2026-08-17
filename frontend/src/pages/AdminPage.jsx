@@ -6,6 +6,8 @@ import { DashboardStats } from '@/components/admin/DashboardStats';
 import { SolicitacoesGestao } from '@/components/gestao/SolicitacoesGestao';
 import { TabelaEscala } from '@/components/tabela/TabelaEscala';
 import { useFolgas } from '@/hooks/useFolgas';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const MOBILE_NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -14,6 +16,8 @@ const MOBILE_NAV_ITEMS = [
 ];
 
 export function AdminPage() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const {
     folgas,
     loading,
@@ -44,6 +48,11 @@ export function AdminPage() {
     await carregarFolgas();
   };
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/admin/login', { replace: true });
+  };
+
   return (
     <div className="min-h-screen bg-obsidian text-moonlight flex">
       {/* Desktop Sidebar */}
@@ -51,7 +60,7 @@ export function AdminPage() {
 
       {/* Main Area */}
       <div className="flex-1 flex flex-col min-h-screen">
-        <Header variant="admin" />
+        <Header variant="admin" user={user} onLogout={handleLogout} />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-5xl mx-auto w-full">
           {/* Dashboard Section */}
