@@ -96,6 +96,41 @@ class SolicitacaoFolgaAPITestCase(TestCase):
         })
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_solicitacao_publica_cria_registro_sem_expor_dados_internos(self):
+        response = self.client.post('/api/solicitacoes/publicar/', {
+            'cartomante_nome': 'Cigana Rosa',
+            'dia_semana': 'terca',
+            'turno': 'tarde',
+            'status': 'aprovada',
+            'usuario': self.admin.id,
+            'observacao': 'Tentativa de alterar campos internos',
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, {'detail': 'Solicitação enviada para análise.'})
+
+        folga_publica = SolicitacaoFolga.objects.get(cartomante_nome='Cigana Rosa')
+        self.assertIsNone(folga_publica.usuario)
+        self.assertEqual(folga_publica.status, 'pendente')
+        self.assertEqual(folga_publica.observacao, '')
+
+    def test_solicitacao_publica_nao_permite_listagem(self):
+        response = self.client.get('/api/solicitacoes/')
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_solicitacao_publica_tem_limite_de_taxa(self):
+        requests = []
+        for index in range(6):
+            requests.append(self.client.post('/api/solicitacoes/publicar/', {
+                'cartomante_nome': f'Cartomante Pública {index}',
+                'dia_semana': 'segunda',
+                'turno': 'manha',
+            }))
+
+        self.assertTrue(all(response.status_code == status.HTTP_201_CREATED for response in requests[:5]))
+        self.assertEqual(requests[5].status_code, status.HTTP_429_TOO_MANY_REQUESTS)
     
     def test_aprovar_folga_como_admin(self):
         self.client.force_authenticate(user=self.admin)
