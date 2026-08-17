@@ -120,6 +120,36 @@ class SolicitacaoFolgaAPITestCase(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_escala_publica_expoe_apenas_folgas_aprovadas(self):
+        folga_aprovada = SolicitacaoFolga.objects.create(
+            usuario=self.user,
+            cartomante_nome='Cigana Rosa',
+            dia_semana='terca',
+            turno='tarde',
+            status='aprovada',
+            observacao='Informação administrativa privada',
+            aprovado_por=self.admin,
+        )
+
+        response = self.client.get('/api/solicitacoes/escala-publica/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['results'], [{
+            'cartomante_nome': folga_aprovada.cartomante_nome,
+            'dia_semana': folga_aprovada.dia_semana,
+            'turno': folga_aprovada.turno,
+        }])
+
+    def test_escala_publica_tem_limite_de_taxa(self):
+        responses = [
+            self.client.get('/api/solicitacoes/escala-publica/')
+            for _ in range(11)
+        ]
+
+        self.assertTrue(all(response.status_code == status.HTTP_200_OK for response in responses[:10]))
+        self.assertEqual(responses[10].status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+
     def test_solicitacao_publica_tem_limite_de_taxa(self):
         requests = []
         for index in range(6):
