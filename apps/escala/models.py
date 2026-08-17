@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -88,6 +89,13 @@ class SolicitacaoFolga(models.Model):
             models.Index(fields=['status', 'dia_semana']),
             models.Index(fields=['usuario', 'data_solicitacao']),
             models.Index(fields=['status']),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['usuario', 'dia_semana', 'turno'],
+                condition=Q(status__in=['pendente', 'aprovada']),
+                name='unique_active_folga_per_user_shift',
+            ),
         ]
 
     def clean(self):
