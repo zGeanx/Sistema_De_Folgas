@@ -6,6 +6,12 @@ export const folgasService = {
     const response = await apiClient.get(API_ENDPOINTS.SOLICITACOES, { params });
     return response.data.results ?? response.data;
   },
+  getPublicEscala: async () => {
+    const response = await apiClient.get(
+      `${API_ENDPOINTS.SOLICITACOES}escala-publica/`,
+    );
+    return response.data.results ?? response.data;
+  },
   createFolga: async (dados) => {
     const response = await apiClient.post(API_ENDPOINTS.SOLICITACOES, dados);
     return response.data;
