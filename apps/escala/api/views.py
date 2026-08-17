@@ -1,10 +1,8 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
 from django.utils import timezone
 from django.db.models import Count, Q
-from django.contrib.auth.models import User
 
 from apps.escala.models import SolicitacaoFolga
 from .serializers import SolicitacaoFolgaSerializer, AprovarRecusarSerializer
@@ -16,31 +14,30 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
     """
     queryset = SolicitacaoFolga.objects.all().order_by('-data_solicitacao')
     serializer_class = SolicitacaoFolgaSerializer
-    permission_classes = [permissions.AllowAny]
+
+    def get_permissions(self):
+        if self.action in {
+            'aprovar',
+            'recusar',
+            'destroy',
+            'update',
+            'partial_update',
+            'estatisticas',
+        }:
+            return [permissions.IsAdminUser()]
+
+        return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
         queryset = SolicitacaoFolga.objects.all().order_by('-data_solicitacao')
-        return queryset
+        if self.request.user.is_staff:
+            return queryset
+        return queryset.filter(usuario=self.request.user)
 
     def perform_create(self, serializer):
-        user = self.request.user if self.request.user.is_authenticated else None
-        if not user:
-            # Obtém ou cria usuário de sistema para solicitações anônimas
-            user, _ = User.objects.get_or_create(
-                username='sistema',
-                defaults={'is_staff': False, 'is_active': True}
-            )
-        serializer.save(usuario=user)
+        serializer.save(usuario=self.request.user)
 
-    def perform_update(self, serializer):
-        instance = serializer.instance
-        novo_status = serializer.validated_data.get('status', instance.status)
-        if novo_status in ['aprovada', 'recusada'] and novo_status != instance.status:
-            serializer.save(data_acao=timezone.now())
-        else:
-            serializer.save()
-
-    @action(detail=True, methods=['post'], permission_classes=[permissions.AllowAny])
+    @action(detail=True, methods=['post'])
     def aprovar(self, request, pk=None):
         folga = self.get_object()
         folga.status = 'aprovada'
@@ -59,7 +56,7 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
-    @action(detail=True, methods=['post'], permission_classes=[permissions.AllowAny])
+    @action(detail=True, methods=['post'])
     def recusar(self, request, pk=None):
         folga = self.get_object()
         folga.status = 'recusada'
@@ -80,10 +77,7 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def minhas_folgas(self, request):
-        if request.user.is_authenticated:
-            folgas = SolicitacaoFolga.objects.filter(usuario=request.user).order_by('-data_solicitacao')
-        else:
-            folgas = SolicitacaoFolga.objects.all().order_by('-data_solicitacao')
+        folgas = self.get_queryset()
 
         serializer = self.get_serializer(folgas, many=True)
         return Response(serializer.data)
@@ -122,6 +116,10 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
         if turno_param:
             queryset = queryset.filter(turno=turno_param)
 
-        # Retorna lista direta sem paginação para compatibilidade com o frontend
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
