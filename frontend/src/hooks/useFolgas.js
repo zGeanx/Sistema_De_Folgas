@@ -24,15 +24,27 @@ export const useFolgas = () => {
     }
   }, []);
 
+  const carregarEscalaPublica = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await folgasService.getPublicEscala();
+      setFolgas(Array.isArray(data) ? data : []);
+      return data;
+    } catch {
+      toast.error('Erro ao carregar a escala aprovada');
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const solicitarFolga = useCallback(async (dados) => {
     try {
       setLoading(true);
-      const novaFolga = await folgasService.createFolga(dados);
-      setFolgas((prev) => [novaFolga, ...prev]);
+      await folgasService.createPublicFolga(dados);
       toast.success('✨ Solicitação enviada aos astros!', {
-        description: `${novaFolga.cartomante_nome} solicitou folga para ${novaFolga.dia_semana_display || novaFolga.dia_semana}.`,
+        description: 'A solicitação foi enviada para análise da gestão.',
       });
-      return novaFolga;
     } catch (err) {
       const mensagem =
         err.response?.data?.non_field_errors?.[0] ||
@@ -94,6 +106,7 @@ export const useFolgas = () => {
     folgas,
     loading,
     carregarFolgas,
+    carregarEscalaPublica,
     solicitarFolga,
     aprovarFolga,
     recusarFolga,
