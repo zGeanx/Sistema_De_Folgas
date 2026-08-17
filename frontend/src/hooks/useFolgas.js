@@ -25,12 +25,10 @@ export const useFolgas = () => {
   const solicitarFolga = useCallback(async (dados) => {
     try {
       setLoading(true);
-      const novaFolga = await folgasService.createFolga(dados);
-      setFolgas((prev) => [novaFolga, ...prev]);
+      await folgasService.createPublicFolga(dados);
       toast.success('✨ Solicitação enviada aos astros!', {
-        description: `${novaFolga.cartomante_nome} solicitou folga para ${novaFolga.dia_semana_display || novaFolga.dia_semana}.`,
+        description: 'A solicitação foi enviada para análise da gestão.',
       });
-      return novaFolga;
     } catch (err) {
       const mensagem =
         err.response?.data?.non_field_errors?.[0] ||
