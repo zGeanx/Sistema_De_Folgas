@@ -1,28 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Header } from '@/components/layout/Header';
-import { BottomNav } from '@/components/layout/BottomNav';
 import { FormularioFolga } from '@/components/formulario/FormularioFolga';
-import { TabelaEscala } from '@/components/tabela/TabelaEscala';
 import { useFolgas } from '@/hooks/useFolgas';
 
 export function CartomantePage() {
   const {
-    folgas,
-    loading,
-    carregarFolgas,
     solicitarFolga,
   } = useFolgas();
 
-  const [activeTab, setActiveTab] = useState('solicitar');
-
-  useEffect(() => {
-    carregarFolgas();
-  }, [carregarFolgas]);
-
   const handleCreated = async (data) => {
     await solicitarFolga(data);
-    await carregarFolgas();
-    setActiveTab('escala');
   };
 
   return (
@@ -36,23 +23,10 @@ export function CartomantePage() {
       <div className="relative z-10 flex-1 flex flex-col max-w-lg sm:max-w-2xl mx-auto w-full">
         <Header variant="cartomante" />
 
-        {/* Page Content — abas preservadas no DOM para troca instantânea (0ms de lag no iPhone) */}
         <main className="flex-1 px-4 pb-safe">
-          <div className={activeTab === 'solicitar' ? 'block' : 'hidden'}>
-            <FormularioFolga onFolgaCreated={handleCreated} />
-          </div>
-          <div className={activeTab === 'escala' ? 'block' : 'hidden'}>
-            <TabelaEscala
-              folgas={folgas}
-              loading={loading}
-              onRefresh={carregarFolgas}
-            />
-          </div>
+          <FormularioFolga onFolgaCreated={handleCreated} />
         </main>
       </div>
-
-      {/* Bottom Navigation */}
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
 }
