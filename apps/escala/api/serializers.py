@@ -146,6 +146,14 @@ class PublicSolicitacaoFolgaSerializer(serializers.ModelSerializer):
         return data
 
 
+class PublicEscalaFolgaSerializer(serializers.ModelSerializer):
+    """Expose only the approved schedule fields intended for public display."""
+
+    class Meta:
+        model = SolicitacaoFolga
+        fields = ['cartomante_nome', 'dia_semana', 'turno']
+
+
 class AprovarRecusarSerializer(serializers.Serializer):
     observacao = serializers.CharField(
         required=False,
