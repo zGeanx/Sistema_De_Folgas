@@ -111,6 +111,41 @@ class SolicitacaoFolgaSerializer(serializers.ModelSerializer):
         return data
 
 
+class PublicSolicitacaoFolgaSerializer(serializers.ModelSerializer):
+    """Accept only the information required for an anonymous leave request."""
+
+    class Meta:
+        model = SolicitacaoFolga
+        fields = ['cartomante_nome', 'dia_semana', 'turno']
+
+    def validate_cartomante_nome(self, value):
+        cleaned_value = value.strip()
+        if len(cleaned_value) < 2:
+            raise serializers.ValidationError('Informe um nome com ao menos 2 caracteres.')
+        return cleaned_value
+
+    def validate(self, data):
+        active_requests = SolicitacaoFolga.objects.filter(
+            cartomante_nome__iexact=data['cartomante_nome'],
+            status__in=['pendente', 'aprovada'],
+        )
+
+        if active_requests.count() >= 3:
+            raise serializers.ValidationError(
+                'Você já possui 3 solicitações de folga ativas. Limite máximo atingido.'
+            )
+
+        if active_requests.filter(
+            dia_semana=data['dia_semana'],
+            turno=data['turno'],
+        ).exists():
+            raise serializers.ValidationError(
+                'Já existe uma solicitação ativa para este dia e turno.'
+            )
+
+        return data
+
+
 class AprovarRecusarSerializer(serializers.Serializer):
     observacao = serializers.CharField(
         required=False,
