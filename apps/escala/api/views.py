@@ -8,6 +8,7 @@ from django.db.models import Count, Q
 from apps.escala.models import SolicitacaoFolga
 from .serializers import (
     AprovarRecusarSerializer,
+    PublicEscalaFolgaSerializer,
     PublicSolicitacaoFolgaSerializer,
     SolicitacaoFolgaSerializer,
 )
@@ -21,7 +22,7 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
     serializer_class = SolicitacaoFolgaSerializer
 
     def get_permissions(self):
-        if self.action == 'publicar':
+        if self.action in {'publicar', 'escala_publica'}:
             return [permissions.AllowAny()]
 
         if self.action in {
@@ -37,8 +38,12 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
         return [permissions.IsAuthenticated()]
 
     def get_throttles(self):
-        if self.action == 'publicar':
-            self.throttle_scope = 'public_leave_request'
+        public_throttle_scopes = {
+            'publicar': 'public_leave_request',
+            'escala_publica': 'public_schedule',
+        }
+        if self.action in public_throttle_scopes:
+            self.throttle_scope = public_throttle_scopes[self.action]
             return [ScopedRateThrottle()]
         return super().get_throttles()
 
@@ -61,6 +66,22 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
             {'detail': 'Solicitação enviada para análise.'},
             status=status.HTTP_201_CREATED,
         )
+
+    @action(detail=False, methods=['get'], url_path='escala-publica')
+    def escala_publica(self, request):
+        queryset = SolicitacaoFolga.objects.filter(status='aprovada').order_by(
+            'cartomante_nome',
+            'dia_semana',
+            'turno',
+        )
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = PublicEscalaFolgaSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = PublicEscalaFolgaSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def aprovar(self, request, pk=None):
