@@ -10,6 +10,13 @@ export const folgasService = {
     const response = await apiClient.post(API_ENDPOINTS.SOLICITACOES, dados);
     return response.data;
   },
+  createPublicFolga: async (dados) => {
+    const response = await apiClient.post(
+      `${API_ENDPOINTS.SOLICITACOES}publicar/`,
+      dados,
+    );
+    return response.data;
+  },
   updateFolga: async (id, dados) => {
     const response = await apiClient.patch(
       `${API_ENDPOINTS.SOLICITACOES}${id}/`,
