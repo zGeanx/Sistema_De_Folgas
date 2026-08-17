@@ -30,7 +30,9 @@ class SolicitacaoFolga(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='solicitacoes_folga',
-        verbose_name='Usuário'
+        verbose_name='Usuário',
+        null=True,
+        blank=True,
     )
     
     cartomante_nome = models.CharField(
