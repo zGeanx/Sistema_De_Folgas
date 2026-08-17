@@ -1,11 +1,16 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from django.utils import timezone
 from django.db.models import Count, Q
 
 from apps.escala.models import SolicitacaoFolga
-from .serializers import SolicitacaoFolgaSerializer, AprovarRecusarSerializer
+from .serializers import (
+    AprovarRecusarSerializer,
+    PublicSolicitacaoFolgaSerializer,
+    SolicitacaoFolgaSerializer,
+)
 
 
 class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
@@ -16,6 +21,9 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
     serializer_class = SolicitacaoFolgaSerializer
 
     def get_permissions(self):
+        if self.action == 'publicar':
+            return [permissions.AllowAny()]
+
         if self.action in {
             'aprovar',
             'recusar',
@@ -28,6 +36,12 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
 
         return [permissions.IsAuthenticated()]
 
+    def get_throttles(self):
+        if self.action == 'publicar':
+            self.throttle_scope = 'public_leave_request'
+            return [ScopedRateThrottle()]
+        return super().get_throttles()
+
     def get_queryset(self):
         queryset = SolicitacaoFolga.objects.all().order_by('-data_solicitacao')
         if self.request.user.is_staff:
@@ -36,6 +50,17 @@ class SolicitacaoFolgaViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)
+
+    @action(detail=False, methods=['post'])
+    def publicar(self, request):
+        serializer = PublicSolicitacaoFolgaSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            {'detail': 'Solicitação enviada para análise.'},
+            status=status.HTTP_201_CREATED,
+        )
 
     @action(detail=True, methods=['post'])
     def aprovar(self, request, pk=None):
