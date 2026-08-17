@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from apps.escala.models import SolicitacaoFolga
 
 
@@ -67,6 +68,22 @@ class SolicitacaoFolgaTestCase(TestCase):
                 turno='manha'
             )
             folga.full_clean()
+
+    def test_banco_impede_turno_ativo_duplicado_para_o_mesmo_usuario(self):
+        SolicitacaoFolga.objects.create(
+            usuario=self.user,
+            cartomante_nome='Madame Zelda',
+            dia_semana='segunda',
+            turno='manha',
+        )
+
+        with self.assertRaises(IntegrityError):
+            SolicitacaoFolga.objects.create(
+                usuario=self.user,
+                cartomante_nome='Madame Zelda',
+                dia_semana='segunda',
+                turno='manha',
+            )
     
     def test_atualização_data_acao(self):
         folga = SolicitacaoFolga.objects.create(
