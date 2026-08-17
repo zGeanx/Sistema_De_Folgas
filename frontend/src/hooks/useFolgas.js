@@ -6,29 +6,33 @@ export const useFolgas = () => {
   const [folgas, setFolgas] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const carregarFolgas = useCallback(async () => {
+  const carregarFolgas = useCallback(async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const data = await folgasService.getFolgas();
       setFolgas(Array.isArray(data) ? data : []);
       return data;
     } catch {
-      toast.error('Erro ao carregar folgas', {
-        description: 'Verifique sua conexão com o servidor.',
-      });
+      if (!silent) {
+        toast.error('Erro ao carregar folgas', {
+          description: 'Verifique sua conexão com o servidor.',
+        });
+      }
       return [];
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }, []);
 
   const solicitarFolga = useCallback(async (dados) => {
     try {
       setLoading(true);
-      await folgasService.createPublicFolga(dados);
+      const novaFolga = await folgasService.createFolga(dados);
+      setFolgas((prev) => [novaFolga, ...prev]);
       toast.success('✨ Solicitação enviada aos astros!', {
-        description: 'A solicitação foi enviada para análise da gestão.',
+        description: `${novaFolga.cartomante_nome} solicitou folga para ${novaFolga.dia_semana_display || novaFolga.dia_semana}.`,
       });
+      return novaFolga;
     } catch (err) {
       const mensagem =
         err.response?.data?.non_field_errors?.[0] ||
@@ -45,7 +49,7 @@ export const useFolgas = () => {
 
   const aprovarFolga = useCallback(async (id) => {
     try {
-      await folgasService.aprovarFolga(id);
+      await folgasService.updateFolga(id, { status: 'aprovada' });
       setFolgas((prev) =>
         prev.map((f) => (f.id === id ? { ...f, status: 'aprovada' } : f))
       );
@@ -60,7 +64,7 @@ export const useFolgas = () => {
 
   const recusarFolga = useCallback(async (id) => {
     try {
-      await folgasService.recusarFolga(id);
+      await folgasService.updateFolga(id, { status: 'recusada' });
       setFolgas((prev) =>
         prev.map((f) => (f.id === id ? { ...f, status: 'recusada' } : f))
       );
