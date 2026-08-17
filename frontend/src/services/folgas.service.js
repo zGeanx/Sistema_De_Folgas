@@ -4,7 +4,7 @@ import { API_ENDPOINTS } from '../utils/constants';
 export const folgasService = {
   getFolgas: async (params = {}) => {
     const response = await apiClient.get(API_ENDPOINTS.SOLICITACOES, { params });
-    return response.data;
+    return response.data.results ?? response.data;
   },
   createFolga: async (dados) => {
     const response = await apiClient.post(API_ENDPOINTS.SOLICITACOES, dados);
@@ -19,6 +19,20 @@ export const folgasService = {
   },
   deleteFolga: async (id) => {
     await apiClient.delete(`${API_ENDPOINTS.SOLICITACOES}${id}/`);
+  },
+  aprovarFolga: async (id, dados = {}) => {
+    const response = await apiClient.post(
+      `${API_ENDPOINTS.SOLICITACOES}${id}/aprovar/`,
+      dados
+    );
+    return response.data;
+  },
+  recusarFolga: async (id, dados = {}) => {
+    const response = await apiClient.post(
+      `${API_ENDPOINTS.SOLICITACOES}${id}/recusar/`,
+      dados
+    );
+    return response.data;
   },
 };
 
