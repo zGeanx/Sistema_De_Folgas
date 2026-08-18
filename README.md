@@ -308,40 +308,6 @@ Sistema_De_Folgas/
 └── Procfile                    # Comando de inicialização no Render
 ```
 
-## Problemas comuns
-
-### `Bad Request (400)` ao abrir o backend
-
-Confira `ALLOWED_HOSTS` no Render. Ele deve conter somente o domínio do backend:
-
-```text
-seu-backend.onrender.com
-```
-
-### Erro de CORS no frontend
-
-Confira no backend:
-
-```text
-CORS_ALLOWED_ORIGINS=https://seu-frontend.pages.dev
-```
-
-Não coloque `/api` nem barra final nessa variável.
-
-### Frontend tenta acessar `localhost:8000` em produção
-
-Defina `VITE_API_URL` no provedor do frontend e faça um novo build.
-
-### Não consigo entrar no painel
-
-Crie uma conta administrativa:
-
-```bash
-python manage.py createsuperuser
-```
-
-Em produção, execute esse comando localmente apontando `DATABASE_URL` para o banco Supabase. Nunca exponha uma rota pública para criar administradores.
-
 ## Contribuindo
 
 1. Crie uma branch: `git checkout -b feat/minha-alteracao`.
